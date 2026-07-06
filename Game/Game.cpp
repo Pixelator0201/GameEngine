@@ -2,45 +2,64 @@
 //
 
 #include <iostream>
-#include "SDL3/SDL.h"
+#include <vector>
+
 #include "Engine.h"
+
+using namespace nu;
 
 int main()
 {
+    // INITIALIZATION
     nu::Renderer renderer;
     renderer.Initialize("Game Engine", 1280, 1024);
 
-    SDL_Event e;
-    bool quit = false;
+    //std::cout << sizeof(Vector2) << std::endl;
 
+    Vector2 vel{ 0.5f, 0.0f };
+    std::vector<Vector2> v;
+
+    for (int i = 0; i < 300; i++) 
+    {
+        v.push_back(Vector2{ RandomFloat(1280), RandomFloat(1024) });
+    }
+
+    // MAIN LOOP
+    bool quit = false;
     while (!quit) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_EVENT_QUIT) {
+
+        // UPDATE
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
                 quit = true;
             }
         }
 
-
-        renderer.SetColor(0, 0, 0, 255);
+        // RENDER
+        renderer.SetColor(0.0f, 0.0f, 0.0f, 255);
         renderer.Clear();
 
-        for (int i = 0; i < 1000; i++) {
-            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 255);
-            renderer.DrawPoint(rand() % 1280, rand() % 1024);
-        }
-        for (int i = 0; i < 10; i++) {
-            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 255);
-            renderer.DrawLine(rand() % 1280, rand() % 1024, rand() % 1280, rand() % 1024);
-        }
+        for (size_t i = 0; i < v.size(); i++) {
+            renderer.SetColor(RandomFloat(), RandomFloat(), RandomFloat());
 
-        for (int i = 0; i < 5; i++) {
-            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, rand() % 256);
-            renderer.DrawFillRect(rand() % 1280, rand() % 1024, rand() % 500, rand() % 500);
+            v[i] = v[i] + vel;
+            renderer.DrawPoint(v[i].x, v[i].y);
         }
+        //for (int i = 0; i < 10; i++) {
+        //    renderer.SetColor(RandomFloat(), RandomFloat(), RandomFloat());
+        //    renderer.DrawLine(RandomFloat(1280), RandomFloat(1024), RandomFloat(1280), RandomFloat(1024));
+        //}
+
+        //for (int i = 0; i < 5; i++) {
+        //    renderer.SetColor(RandomFloat(), RandomFloat(), RandomFloat());
+        //    renderer.DrawFillRect(RandomFloat(1280), RandomFloat(1024), RandomFloat(500), RandomFloat(500));
+        //}
 
         renderer.Present(); // Render the screen
     }
 
+    // SHUTDOWN
     renderer.Shutdown();
 
     return 0;
