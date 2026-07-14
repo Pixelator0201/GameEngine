@@ -1,11 +1,17 @@
 #include "pch.h"
 #include "Render.h"
 #include <iostream>
+#include "Transform.h"
+#include "Model.h"
+#include "Input.h"
 
 namespace nu {
 
     bool Renderer::Initialize(const char* name, int width, int height)
     {
+        m_width = width;
+        m_height = height;
+
         SDL_Init(SDL_INIT_VIDEO);
 
         m_window = SDL_CreateWindow(name, width, height, 0);
@@ -75,6 +81,29 @@ namespace nu {
     void Renderer::DrawLine(float x1, float y1, float x2, float y2) const
     {
         SDL_RenderLine(m_renderer, x1, y1, x2, y2);
+    }
+
+    void Renderer::DrawModel(const class Model& model, const struct Transform& transform) const
+    {
+        //SetColor(model.GetColor().r, model.GetColor().g, model.GetColor().b, 1.0f);
+        SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+        
+        for (auto mesh : model.GetMeshes())
+        {
+
+            auto& points = mesh.GetPoints();
+
+            for (int i = 0; i + 1 < points.size(); i++)
+            {
+                Vector2 v1 = points[i]; // local space
+                Vector2 v2 = points[i + 1]; // local space
+
+                v1 *= transform.scale;
+                v2 *= transform.scale;
+
+                DrawLine(v1.x, v1.y, v2.x, v2.y);
+            }
+        }
     }
 
     
