@@ -15,9 +15,8 @@ namespace nu
             m_model{ model }
         { }
 
-        void Update(float dt);
-
-        void Draw(const class Renderer& renderer) const;
+        virtual void Update(float dt);
+        virtual void Draw(const class Renderer& renderer) const;
 
         const Transform& GetTransform() const { return m_transform; }
         void SetPosition(const Vector2& position) { m_transform.position = position; }

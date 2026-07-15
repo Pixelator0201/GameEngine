@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Engine.h"
+#include <Player.h>
 
 using namespace nu;
 
@@ -15,23 +16,16 @@ using namespace nu;
 int main()
 {
     // INITIALIZATION
-    nu::Renderer renderer;
-    renderer.Initialize("Game Engine", 1280, 1024);
-    
-    //std::cout << sizeof(Vector2) << std::endl;
-    nu::Input input;
-    input.Initialize();
-
-    Time time;
+    engine.Initialize();
 
     //std::vector<Vector2> points{ Vector2{ -3, 3 }, Vector2{ 3, 3 } };
-    Mesh mesh{ { Vector2{ -3, 3 }, Vector2{ 3, 3 }, Vector2{ 0, 0 } }, Color{ 0.0f, 0.0f, 1.0f } };
+    Mesh mesh{ { Vector2{ 2, 0 }, Vector2{ -2, 2 }, Vector2{ -1, 0 }, Vector2{2, 0}, Vector2{-2, -2}, Vector2{-1, 0} }, Color{ 0.0f, 0.0f, 1.0f } };
 
-    Actor player{ Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 50.0f }, std::vector<Mesh>{ mesh } };
+    Player player{ 2000.0f, Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f }, std::vector<Mesh>{ mesh } };
 
     Vector2 position{ 640.0f, 512.0f };
     Vector2 velocity{ 0.0f, 0.0f };
-    float speed = 400.0f;
+    
     
     std::vector<Vector2> points;
 
@@ -61,10 +55,14 @@ int main()
         }
 
         // engine
-        input.Update();
-        time.Tick();
+        engine.Update();
 
+        //player.SetRotation(90.0f);
+        player.SetRotation(player.GetTransform().rotation + (90.0f * engine.GetTime().GetDeltaTime()));
 
+        player.Update(engine.GetTime().GetDeltaTime());
+
+        /* 
         //prevTicks = ticks;
         //ticks = SDL_GetTicksNS(); // 1'000'000'000 ticks = 1 second
         //float seconds = (float)ticks / 1'000'000'000;
@@ -78,40 +76,33 @@ int main()
         //if (input.GetButtonPressed(Input::MouseButton::Left)) std::cout << "Button Pressed\n";
         
         //if (keyState[SDL_SCANCODE_SPACE]) std::cout << "press\n";
+        */
 
         Vector2 mousePosition;
         SDL_GetMouseState(&mousePosition.x, &mousePosition.y);
 
-        if (input.GetMouseDown(Input::MouseButton::Left))
+        if (engine.GetInput().GetMouseDown(Input::MouseButton::Left))
         {
             if (points.empty())
             {
-                points.push_back(input.GetMousePosition());
+                points.push_back(engine.GetInput().GetMousePosition());
             }
 
-            Vector2 v = points.back() - input.GetMousePosition();
+            Vector2 v = points.back() - engine.GetInput().GetMousePosition();
 
             if (v.Length() > 10.0f)
             {
-                points.push_back(input.GetMousePosition());
+                points.push_back(engine.GetInput().GetMousePosition());
             }
         }
 
         // undo
-        if (input.GetButtonPressed(Input::MouseButton::Right))
+        if (engine.GetInput().GetButtonPressed(Input::MouseButton::Right))
         {
-            if (points.empty()) points.pop_back();
+            if (!points.empty()) points.pop_back();
         }
 
-        Vector2 force{ 0.0f, 0.0f };
-
-        if (input.GetKeyDown(SDL_SCANCODE_A)) force.x = -speed;
-        if (input.GetKeyDown(SDL_SCANCODE_D)) force.x = speed;
-        if (input.GetKeyDown(SDL_SCANCODE_S)) force.y = speed;
-        if (input.GetKeyDown(SDL_SCANCODE_W)) force.y = -speed;
-
-        player.SetVelocity(player.GetVelocity() + (force * time.GetDeltaTime()));
-        player.Update(time.GetDeltaTime());
+        
 
         //velocity += (force * time.GetDeltaTime());
         //position += (velocity * time.GetDeltaTime());
@@ -120,22 +111,22 @@ int main()
         //position.y = Wrap(0.0f, 1024.0f, position.y);
 
         // RENDER
-        renderer.SetColor(0.0f, 0.0f, 0.0f, 255);
-        renderer.Clear();
+        engine.GetRenderer().SetColor(0.0f, 0.0f, 0.0f, 255);
+        engine.GetRenderer().Clear();
 
         for (int i = 0; i < (int)points.size() - 1; i++) {
-            renderer.SetColor(1.0f, 1.0f, 1.0f);
+            engine.GetRenderer().SetColor(1.0f, 1.0f, 1.0f);
 
             //points[i] = points[i] + vel;
-            renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+            engine.GetRenderer().DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
         }
 
         //character
-        player.Draw(renderer);
+        player.Draw(engine.GetRenderer());
         //renderer.SetColor(1.0f, 1.0f, 1.0f);
         //renderer.DrawFillRect(position.x - 20, position.y - 20, 40, 40);
 
-        renderer.Present(); // Render the screen
+        engine.GetRenderer().Present(); // Render the screen
         //for (int i = 0; i < 10; i++) {
         //    renderer.SetColor(RandomFloat(), RandomFloat(), RandomFloat());
         //    renderer.DrawLine(RandomFloat(1280), RandomFloat(1024), RandomFloat(1280), RandomFloat(1024));
@@ -149,7 +140,7 @@ int main()
     }
 
     // SHUTDOWN
-    renderer.Shutdown();
+    
 
     return 0;
     //fnEngine();
