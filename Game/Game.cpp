@@ -6,13 +6,11 @@
 
 #include "Engine.h"
 #include <Player.h>
+#include <Enemy.h>
+#include <fmod.hpp>
+
 
 using namespace nu;
-
-
-
-
-
 int main()
 {
     // INITIALIZATION
@@ -20,8 +18,32 @@ int main()
 
     //std::vector<Vector2> points{ Vector2{ -3, 3 }, Vector2{ 3, 3 } };
     Mesh mesh{ { Vector2{ 2, 0 }, Vector2{ -2, 2 }, Vector2{ -1, 0 }, Vector2{2, 0}, Vector2{-2, -2}, Vector2{-1, 0} }, Color{ 0.0f, 0.0f, 1.0f } };
+    Model model{ std::vector<Mesh>{ mesh } };
 
-    Player player{ 2000.0f, Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f }, std::vector<Mesh>{ mesh } };
+    Scene scene;
+
+    PlayerDesc playerDesc;
+    playerDesc.name = "Player";
+    playerDesc.model = model;
+    playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
+    playerDesc.velocity = Vector2{ 0.0f, 0.0f };
+    playerDesc.speed = 2000.0f;
+
+    Player* player = new Player{ playerDesc };
+    scene.AddActor(player);
+    
+    for (int i = 0; i < 20; i++)
+    {
+        EnemyDesc enemyDesc;
+        enemyDesc.name = "Enemy";
+        enemyDesc.model = model;
+        enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)nu::engine.GetRenderer().GetWidth()),
+            nu::RandomFloat((float)nu::engine.GetRenderer().GetHeight())} };
+        enemyDesc.speed = 2000.0f;
+
+        Enemy* enemy = new Enemy{ enemyDesc };
+        scene.AddActor(enemy);
+    }
 
     Vector2 position{ 640.0f, 512.0f };
     Vector2 velocity{ 0.0f, 0.0f };
@@ -29,6 +51,7 @@ int main()
     
     std::vector<Vector2> points;
 
+    /* i don't remember what this one was
     //uint64_t ticks = SDL_GetTicksNS();
     //uint64_t prevTicks = ticks;
 
@@ -36,6 +59,7 @@ int main()
     //{
     //    v.push_back(Vector2{ RandomFloat(1280), RandomFloat(1024) });
     //}
+    */
 
 
     // MAIN LOOP
@@ -57,26 +81,10 @@ int main()
         // engine
         engine.Update();
 
-        //player.SetRotation(90.0f);
-        player.SetRotation(player.GetTransform().rotation + (90.0f * engine.GetTime().GetDeltaTime()));
-
-        player.Update(engine.GetTime().GetDeltaTime());
-
-        /* 
-        //prevTicks = ticks;
-        //ticks = SDL_GetTicksNS(); // 1'000'000'000 ticks = 1 second
-        //float seconds = (float)ticks / 1'000'000'000;
-        //float dt = (float)(ticks - prevTicks) / 1'000'000'000;
-        //std::cout << seconds << " " << dt << std::endl;
-
-        //if (input.GetKeyPressed(SDL_SCANCODE_Q)) std::cout << "pressed\n";
-        //if (input.GetKeyDown(SDL_SCANCODE_Q)) std::cout << "down\n";
-        //if (input.GetKeyReleased(SDL_SCANCODE_Q)) std::cout << "released\n";
-
-        //if (input.GetButtonPressed(Input::MouseButton::Left)) std::cout << "Button Pressed\n";
-        
-        //if (keyState[SDL_SCANCODE_SPACE]) std::cout << "press\n";
-        */
+        float dt = engine.GetTime().GetDeltaTime();
+                
+        scene.Update(dt);
+                
 
         Vector2 mousePosition;
         SDL_GetMouseState(&mousePosition.x, &mousePosition.y);
@@ -102,13 +110,7 @@ int main()
             if (!points.empty()) points.pop_back();
         }
 
-        
-
-        //velocity += (force * time.GetDeltaTime());
-        //position += (velocity * time.GetDeltaTime());
-
-        //position.x = Wrap(0.0f, 1280.0f, position.x);
-        //position.y = Wrap(0.0f, 1024.0f, position.y);
+       
 
         // RENDER
         engine.GetRenderer().SetColor(0.0f, 0.0f, 0.0f, 255);
@@ -122,7 +124,9 @@ int main()
         }
 
         //character
-        player.Draw(engine.GetRenderer());
+        //player.Draw(engine.GetRenderer());
+        //enemy.Draw(engine.GetRenderer());
+        scene.Draw(engine.GetRenderer());
         //renderer.SetColor(1.0f, 1.0f, 1.0f);
         //renderer.DrawFillRect(position.x - 20, position.y - 20, 40, 40);
 

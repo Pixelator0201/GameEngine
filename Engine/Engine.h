@@ -13,7 +13,7 @@
 #include "GameTime.h"
 
 #include "Actor.h"
-
+#include "Scene.h"
 
 namespace nu
 {
