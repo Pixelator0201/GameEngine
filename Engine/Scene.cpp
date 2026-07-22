@@ -2,8 +2,16 @@
 #include "Scene.h"
 #include "Actor.h"
 
+
 namespace nu
 {
+	
+	void Scene::AddActor(Actor* actor)
+	{
+		actor->m_scene = this;
+		m_actors.push_back(actor);
+	}
+
 	void Scene::Update(float dt)
 	{
 		for (auto actor : m_actors)
@@ -11,6 +19,7 @@ namespace nu
 			actor->Update(dt);
 		}
 	}
+	
 	void Scene::Draw(const class Renderer& renderer)
 	{
 		for (auto actor : m_actors)
@@ -18,4 +27,5 @@ namespace nu
 			actor->Draw(renderer);
 		}
 	}
+
 }

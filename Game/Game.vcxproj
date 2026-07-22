@@ -145,6 +145,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Assets.cpp" />
     <ClCompile Include="Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\adsmith\source\repos\GameEngine1\ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -153,6 +154,9 @@
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{79f8eec6-4e42-485f-8b32-87529a42bdc0}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Assets.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

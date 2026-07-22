@@ -20,7 +20,7 @@ namespace nu
 	class Engine
 	{
 	public:
-		Engine() = default;
+		static Engine& Get() { static Engine engine; return engine; }
 
 		bool Initialize();
 		void Shutdown();
@@ -32,6 +32,9 @@ namespace nu
 		Time& GetTime() { return m_time; }
 
 	private:
+		Engine() = default;
+
+	private:
 		Input m_input;
 		Renderer m_renderer;
 
@@ -39,5 +42,5 @@ namespace nu
 
 	};
 
-	extern Engine engine;
+	
 }
