@@ -16,9 +16,22 @@ int main()
     // INITIALIZATION
     engine.Initialize();
 
+    // create audio system
+    FMOD::System* audio;
+    FMOD::System_Create(&audio);
+
+    void* extradriverdata = nullptr;
+    audio->init(32, FMOD_INIT_NORMAL, extradriverdata);
+
+    std::vector<FMOD::Sound*> sounds;
+
+
+    
+
     //std::vector<Vector2> points{ Vector2{ -3, 3 }, Vector2{ 3, 3 } };
-    Mesh mesh{ { Vector2{ 2, 0 }, Vector2{ -2, 2 }, Vector2{ -1, 0 }, Vector2{2, 0}, Vector2{-2, -2}, Vector2{-1, 0} }, Color{ 0.0f, 0.0f, 1.0f } };
-    Model model{ std::vector<Mesh>{ mesh } };
+    Mesh mesh{ { Vector2{ 2, 0 }, Vector2{ -2, 2 }, Vector2{ -1, 0 }, Vector2{-2, -2}, Vector2{2, 0} }, Color{ 0.0f, 0.0f, 1.0f } };
+    Mesh mesh2{ { Vector2{ 0, 1 }, Vector2{ -3, 5 }, Vector2{ 2, 0 }, Vector2{ -3, -5 }, Vector2{ 0, -1 } }, Color{ 255, 255, 0 } };
+    Model model{ std::vector<Mesh>{ mesh, mesh2 } };
 
     Scene scene;
 
@@ -38,7 +51,7 @@ int main()
         enemyDesc.name = "Enemy";
         enemyDesc.model = model;
         enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)nu::engine.GetRenderer().GetWidth()),
-            nu::RandomFloat((float)nu::engine.GetRenderer().GetHeight())} };
+            nu::RandomFloat((float)nu::engine.GetRenderer().GetHeight())}, 90.0f, 10.0f };
         enemyDesc.speed = 2000.0f;
 
         Enemy* enemy = new Enemy{ enemyDesc };
@@ -61,6 +74,25 @@ int main()
     //}
     */
 
+    FMOD::Sound* sound = nullptr;
+    audio->createSound("test.wav", FMOD_DEFAULT, 0, &sound);
+
+    audio->playSound(sound, 0, false, nullptr);
+
+    audio->createSound("whistle.mp3", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
+
+    audio->createSound("alert.mp3", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
+
+    audio->createSound("error.mp3", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
+
+    audio->createSound("hee-hee.mp3", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
+
+    audio->createSound("scream.mp3", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
 
     // MAIN LOOP
     bool quit = false;
@@ -84,6 +116,7 @@ int main()
         float dt = engine.GetTime().GetDeltaTime();
                 
         scene.Update(dt);
+        audio->update();
                 
 
         Vector2 mousePosition;
@@ -110,7 +143,31 @@ int main()
             if (!points.empty()) points.pop_back();
         }
 
-       
+       // Keyboard sounds
+        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_1))
+        {
+            audio->playSound(sounds[0], nullptr, false, nullptr);
+        }
+
+        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_2))
+        {
+            audio->playSound(sounds[1], nullptr, false, nullptr);
+        }
+
+        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_3))
+        {
+            audio->playSound(sounds[2], nullptr, false, nullptr);
+        }
+
+        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_4))
+        {
+            audio->playSound(sounds[3], nullptr, false, nullptr);
+        }
+
+        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_5))
+        {
+            audio->playSound(sounds[4], nullptr, false, nullptr);
+        }
 
         // RENDER
         engine.GetRenderer().SetColor(0.0f, 0.0f, 0.0f, 255);
@@ -131,15 +188,7 @@ int main()
         //renderer.DrawFillRect(position.x - 20, position.y - 20, 40, 40);
 
         engine.GetRenderer().Present(); // Render the screen
-        //for (int i = 0; i < 10; i++) {
-        //    renderer.SetColor(RandomFloat(), RandomFloat(), RandomFloat());
-        //    renderer.DrawLine(RandomFloat(1280), RandomFloat(1024), RandomFloat(1280), RandomFloat(1024));
-        //}
 
-        //for (int i = 0; i < 5; i++) {
-        //    renderer.SetColor(RandomFloat(), RandomFloat(), RandomFloat());
-        //    renderer.DrawFillRect(RandomFloat(1280), RandomFloat(1024), RandomFloat(500), RandomFloat(500));
-        //}
 
     }
 

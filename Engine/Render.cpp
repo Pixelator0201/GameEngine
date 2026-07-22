@@ -86,11 +86,11 @@ namespace nu {
 
     void Renderer::DrawModel(const class Model& model, const struct Transform& transform) const
     {
-        //SetColor(model.GetColor().r, model.GetColor().g, model.GetColor().b, 1.0f);
-        SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+        //SetColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         for (auto mesh : model.GetMeshes())
         {
+            SetColor(mesh.GetColor().r, mesh.GetColor().g, mesh.GetColor().b, 1.0f);
 
             auto& points = mesh.GetPoints();
 
