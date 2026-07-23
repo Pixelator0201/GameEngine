@@ -36,8 +36,3 @@ void Enemy::Update(float dt)
 
     Actor::Update(dt);
 }
-
-void Enemy::Draw(const nu::Renderer& renderer) const
-{
-    Actor::Draw(renderer);
-}

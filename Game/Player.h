@@ -18,7 +18,6 @@ public:
     Player(float speed, const nu::Transform& transform, const nu::Model& model) : Actor{ transform, model }, m_speed{ speed } {}
 
     void Update(float dt) override;
-    void Draw(const nu::Renderer& renderer) const override;
 private:
     int m_ammo = 0;
     float m_speed = 800.0f;

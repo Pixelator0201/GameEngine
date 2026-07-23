@@ -5,16 +5,15 @@
 #include <vector>
 
 #include "Engine.h"
-#include <Player.h>
-#include <Enemy.h>
+#include "Player.h"
+#include "Enemy.h"
 #include <fmod.hpp>
 #include "Assets.h"
 #include "File.h"
 
 using namespace nu;
 int main()
-{
-    // get current working directory
+{// get current working directory
     std::cout << "Directory Operations:\n";
     std::cout << "Working directory: " << nu::GetWorkingDirectory() << "\n";
 
@@ -63,6 +62,7 @@ int main()
     {
         std::cout << str << "\n";
     }
+    
 
 
     // INITIALIZATION
@@ -89,6 +89,7 @@ int main()
     playerDesc.model = assets::playerModel;
     playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
     playerDesc.velocity = Vector2{ 0.0f, 0.0f };
+    playerDesc.damping = 3.0f;
     playerDesc.speed = 2000.0f;
 
     Player* player = new Player{ playerDesc };
@@ -101,7 +102,8 @@ int main()
         enemyDesc.model = assets::enemyModel;
         enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)nu::Engine::Get().GetRenderer().GetWidth()),
             nu::RandomFloat((float)nu::Engine::Get().GetRenderer().GetHeight())}, 90.0f, 10.0f };
-        enemyDesc.speed = 2000.0f;
+        enemyDesc.damping = 3.0f;
+        enemyDesc.speed = RandomFloat(1000.0f, 2000.0f);
 
         Enemy* enemy = new Enemy{ enemyDesc };
         scene.AddActor(enemy);
