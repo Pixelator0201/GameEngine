@@ -1,0 +1,173 @@
+#include "pch.h"
+#include "Player.h"
+#include "Render.h"
+#include "Engine.h"
+#include "Bullet.h"
+#include "Assets.h"
+#include "SpaceGame.h"
+
+void Player::Update(float dt)
+{
+    // Movement
+    float thrust = 0.0f;
+    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_S)) thrust = -m_speed;
+    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_W)) thrust = m_speed;
+
+    float rotate = 0.0f;
+    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_A)) rotate = -180.0f;
+    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_D)) rotate = 180.0f;
+
+
+    SetRotation(m_transform.rotation + rotate * dt);
+
+    nu::Vector2 forward{ 1, 0 }; // ->
+    nu::Vector2 velocity = forward.Rotate(m_transform.rotation * nu::DegToRad) * thrust;
+    AddVelocity(velocity * dt);
+
+    // Warp
+    if (warp_cooldown <= 0)
+    {
+        if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_TAB))
+        {
+            warp_cooldown = 5.0f;
+            m_transform.position += forward.Rotate(m_transform.rotation * nu::DegToRad) * 300;
+        }
+    }
+    else {
+        warp_cooldown -= dt;
+    }
+
+    ((SpaceGame*)m_scene->GetGame())->SetHealth(m_health);
+
+    // Fire
+    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_1)) bulletType = 1;
+    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_2)) bulletType = 2;
+    if (bulletType == 1) {
+        if (fire_cooldown <= 0)
+        {
+            if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_SPACE))
+            {
+                fire_cooldown = 0.25f;
+                BulletDesc desc;
+                desc.name = "Bullet";
+                desc.tag = "PlayerBullet";
+                desc.model = assets::bulletModel;
+                desc.transform = m_transform,
+                    desc.speed = 1000.0f;
+                desc.lifespan = 2.0f;
+
+                m_scene->AddActor(std::make_unique<Bullet>(desc));
+            }
+        }
+        else {
+            fire_cooldown -= dt;
+        }
+    }
+
+    if (bulletType == 2) {
+        if (fire_cooldown <= 0)
+        {
+            if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_SPACE))
+            {
+                fire_cooldown = 2.0f;
+                BulletDesc desc;
+                desc.name = "Bullet";
+                desc.tag = "PlayerBullet";
+                desc.model = assets::bulletModel;
+                desc.transform = m_transform;
+                desc.speed = 1000.0f;
+                desc.lifespan = 2.0f;
+                
+                m_scene->AddActor(std::make_unique<Bullet>(desc));
+
+                desc.transform.rotation += 10.0f;
+                m_scene->AddActor(std::make_unique<Bullet>(desc));
+
+                desc.transform.rotation -= 20.0f;
+                m_scene->AddActor(std::make_unique<Bullet>(desc));
+
+            }
+        }
+        else {
+            fire_cooldown -= dt;
+        }
+    }
+    // Bullet time
+    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_X))
+    {
+        nu::Engine::Get().GetTime().SetTimeScale(0.5f);
+    }
+    else
+    {
+        nu::Engine::Get().GetTime().SetTimeScale(1.0f);
+    }
+
+    nu::Particle particle;
+
+    nu::Vector2 offset{ -10.0f, 0.0f };
+    offset = offset.Rotate(m_transform.rotation * nu::DegToRad);
+
+    nu::Color colors[3] = { { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 0.0f} };
+    particle.position = m_transform.position + offset;
+    particle.color = colors[nu::RandomInt(3)];
+    particle.lifespan = nu::RandomFloat(0.5f, 1.5f);
+    particle.velocity = nu::Vector2{ nu::RandomFloat(-30.0f, -100.0f), 0.0f}.Rotate((m_transform.rotation + nu::RandomInt(-30, 30)) * nu::DegToRad);
+
+    if (m_health <= 0)
+    {
+        SetDestroyed();
+        for (int i = 0; i < 100; i++)
+        {
+            nu::Particle particle;
+            particle.position = m_transform.position;
+            particle.color = { 1.0f, 1.0f, 1.0f };
+            particle.lifespan = nu::RandomFloat(0.5f, 2.0f);
+            particle.velocity = { nu::RandomFloat(-600.0f, 600.0f), nu::RandomFloat(-600.0f, 600.0f) };
+
+            nu::Engine::Get().GetPS().AddParticle(particle);
+        }
+    }
+
+    nu::Engine::Get().GetPS().AddParticle(particle);
+
+    Actor::Update(dt);
+}
+
+
+
+void Player::OnCollision(Actor* other)
+{
+    if (other->GetName() == "Enemy")
+    {
+        m_health -= 25;
+        
+        other->SetDestroyed();
+        if (m_health <= 0)
+        {
+            SetDestroyed();
+            for (int i = 0; i < 100; i++)
+            {
+                nu::Particle particle;
+                particle.position = m_transform.position;
+                particle.color = { 1.0f, 1.0f, 1.0f };
+                particle.lifespan = nu::RandomFloat(0.5f, 2.0f);
+                particle.velocity = { nu::RandomFloat(-600.0f, 600.0f), nu::RandomFloat(-600.0f, 600.0f) };
+                nu::Engine::Get().GetPS().AddParticle(particle);
+                
+            }
+            ((SpaceGame*)m_scene->GetGame())->OnPlayerDead();
+        }
+
+        for (int i = 0; i < 100; i++)
+        {
+            nu::Particle particle;
+            particle.position = other->GetTransform().position;
+            particle.color = { 1.0f, 1.0f, 1.0f };
+            particle.lifespan = nu::RandomFloat(0.5f, 2.0f);
+            particle.velocity = { nu::RandomFloat(-600.0f, 600.0f), nu::RandomFloat(-600.0f, 600.0f) };
+
+            nu::Engine::Get().GetPS().AddParticle(particle);
+        }
+    }
+}
+
