@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_image/SDL_image.h>
 
 namespace nu
 { const
@@ -26,6 +27,9 @@ namespace nu
 			int GetHeight() const { return m_height; }
 
 			friend class Text;
+			friend class Texture;
+
+			void DrawTexture(class Texture* texture, float x, float y);
 
 		private:
 			SDL_Window* m_window = nullptr;

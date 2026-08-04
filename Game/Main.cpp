@@ -15,6 +15,7 @@
 #include "SpaceGame.h"
 
 
+
 using namespace nu;
 
 class Object
@@ -63,8 +64,22 @@ int main()
 
         objectB.reset();
     }
+    std::cout << "======================shared pointers======================\n";
+    std::shared_ptr<Object> objectC;
+    {
+        auto objectA = std::make_shared<Object>();
+        std::cout << objectA.get() << std::endl;
+        std::cout << objectA.use_count() << std::endl;
+        auto objectB = objectA;
+        std::cout << objectB.get() << std::endl;
+        std::cout << objectB.use_count() << std::endl;
+        objectC = objectA;
+        std::cout << objectC.get() << std::endl;
+        std::cout << objectC.use_count() << std::endl;
+    }
+    std::cout << objectC.use_count() << std::endl;
 
-
+    //return 0;
 
 
     SetWorkingDirectory("Assets");
@@ -84,6 +99,10 @@ int main()
     
     
     std::vector<Vector2> points;
+
+    // create texture, using shared_ptr so texture can be shared
+    std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+    texture->Load("DonQui.png", Engine::Get().GetRenderer());
 
     // MAIN LOOP
     bool quit = false;
@@ -156,6 +175,9 @@ int main()
         
         
         Engine::Get().GetPS().Draw(Engine::Get().GetRenderer());
+
+        // TODO:: get engine renderer.DrawTexture(...get() texture pointer..., 30, 30);
+        Engine::Get().GetRenderer().DrawTexture(texture.get(), 30, 30);
 
         Engine::Get().GetRenderer().Present(); // Render the screen
 

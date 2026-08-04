@@ -16,6 +16,7 @@
 #include "ParticleSystem.h"
 #include "Actor.h"
 #include "Scene.h"
+#include "Texture.h"
 
 namespace nu
 {
