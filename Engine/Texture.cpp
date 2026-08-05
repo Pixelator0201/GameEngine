@@ -32,15 +32,9 @@ namespace nu
             return false;
         }
 
-        return true;
-    }
+        // cache size
+        SDL_GetTextureSize(m_texture, &m_size.x, &m_size.y);
 
-    Vector2 Texture::GetSize()
-    {
-        Vector2 v;
-        // https://wiki.libsdl.org/SDL3/SDL_GetTextureSize
-        SDL_GetTextureSize(m_texture, &v.x, &v.y);
-       
-        return v;
+        return true;
     }
 }

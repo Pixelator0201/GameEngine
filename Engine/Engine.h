@@ -17,6 +17,7 @@
 #include "Actor.h"
 #include "Scene.h"
 #include "Texture.h"
+#include "ResourceManager.h"
 
 namespace nu
 {

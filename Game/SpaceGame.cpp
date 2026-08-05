@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Assets.h"
+#include <memory>
 
 using namespace nu;
 bool SpaceGame::Initialize()
@@ -14,24 +15,28 @@ bool SpaceGame::Initialize()
 
 	Engine::Get().GetAudio().AddSound("alert", "alert.mp3");
 
-	titleFont = new Font();
-	titleFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 64);
+	//titleFont = Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 64);
+	//titleFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 64);
 
-	titleText = new Text(titleFont);
+	
+	//Resources().Get<Texture>("textures/player.png", Engine::Get().GetRenderer());
+
+
+	titleText = new Text(Resources().GetWithID<Font>("title_font", "Fonts/Orbitron-VariableFont_wght.ttf", 64.0f));
 	titleText->Create(Engine::Get().GetRenderer(), "Totally Original Space Game (tm)", Color{ 1.0f, 1.0f, 1.0f });
 
-	gameOverFont = new Font();
-	gameOverFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 64);
+	//gameOverFont = std::make_shared<Font>();
+	//gameOverFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 64);
 	
-	gameOverText = new Text(gameOverFont);
+	gameOverText = new Text(Resources().GetWithID<Font>("game_font", "Fonts/Orbitron-VariableFont_wght.ttf", 64.0f));
 	gameOverText->Create(Engine::Get().GetRenderer(), "Game Over....", Color{ 1.0f, 1.0f, 1.0f });
 
-	gameFont = new Font();
-	gameFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 32);
+	//gameFont = Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 32);
+	//gameFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 32);
 
-	scoreText = new Text(gameFont);
-	livesText = new Text(gameFont);
-	healthText = new Text(gameFont);
+	scoreText = new Text(Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 32.0f));
+	livesText = new Text(Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 32.0f));
+	healthText = new Text(Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 32.0f));
 
 	
 

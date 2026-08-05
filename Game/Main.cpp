@@ -101,8 +101,8 @@ int main()
     std::vector<Vector2> points;
 
     // create texture, using shared_ptr so texture can be shared
-    std::shared_ptr<Texture> texture = std::make_shared<Texture>();
-    texture->Load("DonQui.png", Engine::Get().GetRenderer());
+    //std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+    //texture->Load("textures/player.png", Engine::Get().GetRenderer());
 
     // MAIN LOOP
     bool quit = false;
@@ -176,8 +176,9 @@ int main()
         
         Engine::Get().GetPS().Draw(Engine::Get().GetRenderer());
 
-        // TODO:: get engine renderer.DrawTexture(...get() texture pointer..., 30, 30);
-        Engine::Get().GetRenderer().DrawTexture(texture.get(), 30, 30);
+        // Draw Texture
+        auto texture = Resources().Get<Texture>("textures/player.png", Engine::Get().GetRenderer());
+        Engine::Get().GetRenderer().DrawTexture(*texture, 30, 30, 23.0f, 2.0f);
 
         Engine::Get().GetRenderer().Present(); // Render the screen
 
