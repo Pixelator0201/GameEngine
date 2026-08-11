@@ -101,7 +101,7 @@ void SpaceGame::Update(float dt)
 
 void SpaceGame::Draw(nu::Renderer& renderer)
 {
-	renderer.DrawTexture(*nu::Resources().Get<Texture>("textures/background.png", Engine::Get().GetRenderer()), 500, 500);
+	renderer.DrawTexture(*nu::Resources().Get<Texture>("textures/background.png", Engine::Get().GetRenderer()), 500, 500, 0.0f, 2.0f);
 
 	switch (m_gameState)
 	{
@@ -156,6 +156,7 @@ void SpaceGame::SpawnPlayer()
 void SpaceGame::SpawnEnemy()
 {
 	EnemyDesc enemyDesc;
+	enemyDesc.name = "Enemy";
 	enemyDesc.texture = Resources().Get<Texture>("textures/enemy.png", Engine::Get().GetRenderer());
 	//enemyDesc.model = assets::enemyModel;
 	enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)nu::Engine::Get().GetRenderer().GetWidth()),

@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include <random>
+#include <fstream>
 
 #include "Engine.h"
 #include "Player.h"
@@ -41,10 +42,8 @@ uint32_t RNG()
 int main()
 {
     SetWorkingDirectory("Assets");
-      
-
-
-    // INITIALIZATION
+    
+        // INITIALIZATION
     Engine::Get().Initialize();
 
     SpaceGame game;
@@ -62,6 +61,8 @@ int main()
     //std::shared_ptr<Texture> texture = std::make_shared<Texture>();
     //texture->Load("textures/player.png", Engine::Get().GetRenderer());
 
+        //auto texture = Resources().Get<Texture>("textures/background.png", Engine::Get().GetRenderer());
+        //Engine::Get().GetRenderer().DrawTexture(*texture, 0, 0, 0.0f, 10.0f);
     // MAIN LOOP
     bool quit = false;
     while (!quit) {
@@ -82,7 +83,7 @@ int main()
         Engine::Get().Update();
 
         float dt = Engine::Get().GetTime().GetDeltaTime();
-
+         
         game.Update(dt);
                             
 
@@ -135,8 +136,6 @@ int main()
         Engine::Get().GetPS().Draw(Engine::Get().GetRenderer());
 
         // Draw Texture
-        auto texture = Resources().Get<Texture>("textures/player.png", Engine::Get().GetRenderer());
-        Engine::Get().GetRenderer().DrawTexture(*texture, 30, 30, 23.0f, 2.0f);
 
         Engine::Get().GetRenderer().Present(); // Render the screen
 

@@ -37,7 +37,7 @@ namespace nu
     float Actor::GetRadius() const
     {
         if (m_model) return m_model->GetRadius() * m_transform.scale * 0.3f;
-        if (m_texture) return m_texture->GetSize().Length() * 0.5f * 0.5f;
+        if (m_texture) return (m_texture->GetSize().Length() * 0.5f) * 0.25f;
 
         return 0;
     }
