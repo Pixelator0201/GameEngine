@@ -18,6 +18,10 @@ public:
     void Update(float dt) override;
     void OnCollision(Actor* other);
 
+    virtual void Read(const nu::json::value_t& value) override;
+
+    float GetSpeed() const { return m_speed; }
+
     int GetHealth() const { return m_health; }
 private:
     int m_ammo = 0;
