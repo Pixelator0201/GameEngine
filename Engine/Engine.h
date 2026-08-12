@@ -7,6 +7,9 @@
 #include "MathUtils.h"
 #include "Game.h"
 #include "Text.h"
+#include "StringUtils.h"
+#include "Factory.h"
+#include "JSON.h"
 
 // Systems
 #include "Render.h"

@@ -20,28 +20,149 @@
 
 using namespace nu;
 
-class Object
+class Animal
 {
 public:
-    Object() { std::cout << "constructor\n"; }
-    ~Object() { std::cout << "destructor\n"; }
-
-    Object(const Object& object) { std::cout << "copy\n"; }
-    Object& operator = (const Object& object) { std::cout << "assignment\n"; return *this; }
-
+    virtual void speak() { std::cout << "???"; }
 };
 
-uint32_t seed = 1234;
-
-uint32_t RNG()
+class Cat : public Animal
 {
-    seed = (seed * 1103515245) + 12345;
-    return seed;
+    void speak() override { std::cout << "meow"; }
+};
+
+class Dog : public Animal
+{
+    void speak() override { std::cout << "arf"; }
+};
+
+class Bird : public Animal
+{
+    void speak() override { std::cout << "I know what you did"; }
+};
+
+/*
+enum class Type
+{
+    Cat = 1,
+    Dog,
+    Bird
+};
+
+Animal* AnimalFactory(Type id)
+{
+    Animal* animal = nullptr;
+
+    switch (id)
+    {
+    case Type::Cat: // Cat
+        animal = new Cat;
+        break;
+        case Type::Dog:
+        animal = new Dog;
+        break;
+        case Type::Bird:
+        animal = new Bird;
+        break;
+    }
+
+    return animal;
 }
+*/
+Animal* AnimalFactory(const std::string& id)
+{
+    Animal* animal = nullptr;
+
+    if (nu::EqualsIgnoreCase(id, "Cat")) animal = new Cat;
+    if (nu::EqualsIgnoreCase(id, "Dog")) animal = new Dog;
+    if (nu::EqualsIgnoreCase(id, "Bird")) animal = new Bird;
+
+    return animal;
+}
+
+//class ICreator
+//{
+//public:
+//    virtual ~ICreator() = default;
+//    virtual std::unique_ptr<Animal> Create() = 0;
+//};
+//
+//template <typename T>
+//class Creator : public ICreator
+//{
+//public:
+//    std::unique_ptr<Animal> Create() override { return new std::make_unique<T>(); }
+//};
+//
+//std::map<std::string, std::unique_ptr<ICreator>> registry;
+//
+
 
 int main()
 {
+      //Factory::Instance().Register<Actor>("Actor");
+      //auto actor = Factory::Instance().Create<Actor>("Actor");
+    //std::cout << actor->IsActive() << std::endl;
+    //registry["Cat"] = std::make_unique<Creator<Cat>>();
+    //registry["Dog"] = std::make_unique<Creator<Dog>>();
+    //
+    //{
+    //    auto animal = registry["Dog"]->Create();
+    //    animal->speak();
+    //}
+
+    //std::string selection;
+    //std::cout << "Select Animal: ";
+    //std::cin >> selection;
+
+    //auto animal = AnimalFactory(selection);
+    //animal->speak();
+
     SetWorkingDirectory("Assets");
+
+    // load the json data from a file
+    std::string buffer;
+    if (ReadTextFile("data/data.json", buffer))
+    {
+        // show the contents of the json file (debug)
+        std::cout << buffer << std::endl;
+
+        // create json document from the json file contents
+        rapidjson::Document document;
+        if (json::Load("data/data.json", document))
+        {
+            // read the age data (int) from the json
+            int age;
+            json::Read(document, "age", age);
+            // show the age data
+            std::cout << age << std::endl;
+        }
+        // read/show the data from the json file
+        std::string name;
+        int age;
+        float speed;
+        bool isAwake;
+        nu::Vector2 position;
+        nu::Vector3 color;
+
+        // read the json data
+        JSON_READ(document, name);
+        JSON_READ(document, age);
+        JSON_READ(document, speed);
+        JSON_READ(document, isAwake);
+        JSON_READ(document, position);
+        JSON_READ(document, color);
+
+        // show the data
+        std::cout << name << " " << age << " " << speed << " " << isAwake << std::endl;
+        std::cout << position.x << " " << position.y << std::endl;
+        std::cout << color.r << " " << color.g << " " << color.b << " " << std::endl;
+    }
+
+
+
+
+
     
         // INITIALIZATION
     Engine::Get().Initialize();

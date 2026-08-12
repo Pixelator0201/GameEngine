@@ -5,6 +5,7 @@
 #include "Resource.h"
 #include <string>
 #include <memory>
+#include "Object.h"
 
 namespace nu
 {
@@ -23,7 +24,7 @@ namespace nu
         res_t<Texture> texture;
     };
 
-    class Actor
+    class Actor : public Object
     {
     public:
         Actor() = default;

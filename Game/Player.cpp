@@ -112,6 +112,7 @@ void Player::Update(float dt)
     nu::Color colors[3] = { { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 0.0f} };
     particle.position = m_transform.position + offset;
     particle.color = colors[nu::RandomInt(3)];
+    particle.texture = nu::Resources().Get<nu::Texture>("textures/bullet.png", nu::Engine::Get().GetRenderer());
     particle.lifespan = nu::RandomFloat(0.5f, 1.5f);
     particle.velocity = nu::Vector2{ -nu::RandomFloat(-30.0f, -100.0f), 0.0f }.Rotate((m_transform.rotation + nu::RandomInt(-30, 30)) * nu::DegToRad);
 
@@ -123,6 +124,7 @@ void Player::Update(float dt)
             nu::Particle particle;
             particle.position = m_transform.position;
             particle.color = { 1.0f, 1.0f, 1.0f };
+            particle.texture = nu::Resources().Get<nu::Texture>("textures/bullet.png", nu::Engine::Get().GetRenderer());
             particle.lifespan = nu::RandomFloat(0.5f, 2.0f);
             particle.velocity = { nu::RandomFloat(-600.0f, 600.0f), nu::RandomFloat(-600.0f, 600.0f) };
 
