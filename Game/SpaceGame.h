@@ -21,7 +21,7 @@ public:
 		Game{ scene } 
 	{	}
 
-	bool Initialize() override;
+	bool Initialize();
 
 	void Update(float dt) override;
 	void Draw(class nu::Renderer& renderer) override;

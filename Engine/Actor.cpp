@@ -3,9 +3,14 @@
 #include "Render.h"
 #include "MathUtils.h"
 #include "Texture.h"
+#include "Engine.h"
+#include <Components/RendererComponent.h>
+//#include "ResourceManager.h"
 
 namespace nu
 {
+    FACTORY_REGISTER(Actor)
+
     void Actor::Update(float dt)
     {
         // Lifespan
@@ -13,6 +18,10 @@ namespace nu
         {
             m_lifespan -= dt;
             m_destroyed = (m_lifespan <= 0.0f);
+        }
+
+        for (auto component : m_components) {
+            component->Update(dt);
         }
 
         // Physics
@@ -25,21 +34,17 @@ namespace nu
 
     void Actor::Draw(const Renderer& renderer) const
     {
-        if (m_model)
-        {
-            renderer.DrawModel(*m_model, m_transform);
-        }
-        if (m_texture)
-        {
-            renderer.DrawTexture(*m_texture, m_transform.position.x, m_transform.position.y, m_transform.rotation, m_transform.scale);
+        for (auto component : m_components) {
+            auto rendererComponent = dynamic_cast<RendererComponent*>(component);
+            if (rendererComponent)
+            {
+                rendererComponent->Draw(renderer);
+            }
         }
     }
     float Actor::GetRadius() const
     {
-        if (m_model) return m_model->GetRadius() * m_transform.scale * 0.3f;
-        if (m_texture) return (m_texture->GetSize().Length() * 0.5f) * 0.25f;
-
-        return 0;
+        return 0.0f;
     }
 
     void Actor::Read(const json::value_t& value)
@@ -55,5 +60,27 @@ namespace nu
         JSON_READ_NAME(value, "lifespan", m_lifespan);
         JSON_READ_NAME(value, "velocity", m_velocity);
         JSON_READ_NAME(value, "damping", m_damping);
+
+        // read actor components
+        if (JSON_HAS_NAME(value, "components"))
+        {
+            //iterate through actor components
+            for (auto& componentValue : JSON_GET_NAME(value, "components").GetArray())
+            {
+                // get component type
+                std::string typeName;
+                JSON_READ_NAME(componentValue, "type", typeName);
+
+                std::cout << "Loading component type: " << typeName << std::endl;
+
+                // create component of type
+                auto component = Factory::Instance().Create<Component>(typeName);
+
+                if (component)
+                {
+                    component->Read(componentValue);
+                }
+            }
+        }
     }
 }

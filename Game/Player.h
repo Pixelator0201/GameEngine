@@ -14,6 +14,8 @@ public:
         Actor{ playerDesc },
         m_speed{ playerDesc.speed }
     { }
+
+    CLASS_PROTOTYPE(Player)
     
     void Update(float dt) override;
     void OnCollision(Actor* other);

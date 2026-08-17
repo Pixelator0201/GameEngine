@@ -6,6 +6,8 @@
 #include "Assets.h"
 #include "SpaceGame.h"
 
+FACTORY_REGISTER(Player)
+
 void Player::Update(float dt)
 {
     // Movement
@@ -51,7 +53,6 @@ void Player::Update(float dt)
                 BulletDesc desc;
                 desc.name = "Bullet";
                 desc.tag = "PlayerBullet";
-                desc.texture = nu::Resources().Get<nu::Texture>("textures/bullet.png", nu::Engine::Get().GetRenderer());
                 desc.transform = m_transform;
                 //desc.transform.scale *= 15.0f;
                 desc.speed = 1000.0f;
@@ -74,7 +75,7 @@ void Player::Update(float dt)
                 BulletDesc desc;
                 desc.name = "Bullet";
                 desc.tag = "PlayerBullet";
-                desc.texture = nu::Resources().Get<nu::Texture>("textures/bullet.png", nu::Engine::Get().GetRenderer());
+               
                 desc.transform = m_transform;
                 //desc.transform.scale *= 15.0f;
                 desc.speed = 1000.0f;
@@ -141,7 +142,7 @@ void Player::Update(float dt)
 
 void Player::OnCollision(Actor* other)
 {
-    if (other->GetName() == "Enemy")
+    if (other->GetTag() == "Enemy")
     {
         m_health -= 25;
         

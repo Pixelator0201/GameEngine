@@ -14,9 +14,13 @@ public:
         Actor(enemyDesc),
         m_speed{ enemyDesc.speed }
     { }
+
+    CLASS_PROTOTYPE(Enemy)
     
     void Update(float dt) override;
     void OnCollision(Actor* other) override;
+
+    virtual void Read(const nu::json::value_t& value) override;
 private:
     int m_ammo = 0;
     float m_speed = 800.0f;

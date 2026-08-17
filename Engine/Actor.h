@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include "Object.h"
+#include "Component.h"
 
 namespace nu
 {
@@ -20,8 +21,6 @@ namespace nu
         Vector2 velocity{ 0.0f, 0.0f };
         float damping{ 0.0f };
         float lifespan{ 0 };
-        res_t<Model> model;
-        res_t<Texture> texture;
     };
 
     class Actor : public Object
@@ -33,11 +32,10 @@ namespace nu
             m_transform{ actorDesc.transform },
             m_velocity{ actorDesc.velocity },
             m_damping{ actorDesc.damping },
-            m_lifespan{ actorDesc.lifespan },
-            m_model{ actorDesc.model },
-            m_texture{ actorDesc.texture }
+            m_lifespan{ actorDesc.lifespan }
         { }
 
+        CLASS_PROTOTYPE(Actor)
               
         virtual void Update(float dt);
         virtual void Draw(const class Renderer& renderer) const;
@@ -76,8 +74,8 @@ namespace nu
         float m_lifespan{ 0 };
         bool m_destroyed{ false };
 
-        res_t<Model> m_model;
-        res_t<Texture> m_texture;
+        std::vector<Component*> m_components;
+
         Scene* m_scene{ nullptr };
     };
 
