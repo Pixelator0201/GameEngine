@@ -11,6 +11,20 @@ namespace nu
 {
     FACTORY_REGISTER(Actor)
 
+    Actor::Actor(const Actor& other) : 
+        Object { other }, 
+        m_tag{ other.m_tag }, 
+        m_transform{other.m_transform},
+        m_damping{other.m_damping},
+        m_lifespan{other.m_lifespan}
+    {
+        for (const auto& component : other.m_components)
+        {
+            auto clone = std::unique_ptr<Component>(dynamic_cast<Component*>(component->Clone().release()));
+            AddComponent(std::move(clone));
+        }
+    }
+
     void Actor::Update(float dt)
     {
         // Lifespan
@@ -20,7 +34,7 @@ namespace nu
             m_destroyed = (m_lifespan <= 0.0f);
         }
 
-        for (auto component : m_components) {
+        for (auto& component : m_components) {
             component->Update(dt);
         }
 
@@ -34,8 +48,8 @@ namespace nu
 
     void Actor::Draw(const Renderer& renderer) const
     {
-        for (auto component : m_components) {
-            auto rendererComponent = dynamic_cast<RendererComponent*>(component);
+        for (auto& component : m_components) {
+            auto rendererComponent = dynamic_cast<RendererComponent*>(component.get());
             if (rendererComponent)
             {
                 rendererComponent->Draw(renderer);
@@ -56,7 +70,7 @@ namespace nu
             m_transform.Read(JSON_GET_NAME(value, "transform"));
         }
 
-        JSON_READ_NAME(value, "tag", m_tag);
+        json::Read(value, "tag", m_tag);
         JSON_READ_NAME(value, "lifespan", m_lifespan);
         JSON_READ_NAME(value, "velocity", m_velocity);
         JSON_READ_NAME(value, "damping", m_damping);
@@ -79,8 +93,15 @@ namespace nu
                 if (component)
                 {
                     component->Read(componentValue);
+                    AddComponent(std::move(component));
                 }
             }
         }
+    }
+
+    void Actor::AddComponent(std::unique_ptr<Component> component)
+    {
+        component->SetOwner(this);
+        m_components.push_back(std::move(component));
     }
 }

@@ -10,10 +10,10 @@ namespace nu
 	class Object
 	{
 	public:
+		CLASS_PROTOTYPE(Object)
 		Object() = default;
 		virtual ~Object() = default;
 
-		CLASS_PROTOTYPE(Object)
 
 		const std::string& GetName() const { return m_name; }
 		bool IsActive() const { return m_active; }

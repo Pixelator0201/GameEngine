@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Actor.h"
 #include "Factory.h"
+#include "Components/ColliderComponent.h"
 
 namespace nu
 {
@@ -30,7 +31,7 @@ namespace nu
 					JSON_READ_NAME(actorValue, "type", typeName);
 
 					auto actor = Factory::Instance().Create<Actor>(typeName);
-					actor->Read(document);
+					actor->Read(actorValue);
 
 					bool prototype = false;
 					JSON_READ(actorValue, prototype);
@@ -40,7 +41,7 @@ namespace nu
 					{
 						std::string name;
 						JSON_READ(actorValue, name);
-						Factory::Instance().RegisterPrototype<Actor>("PlayerPrototype", std::move(actor));
+						Factory::Instance().RegisterPrototype<Actor>(name, std::move(actor));
 					}
 					else
 					{
@@ -100,8 +101,12 @@ namespace nu
 			{
 				if (actorA == actorB || actorA->m_destroyed || actorB->m_destroyed) continue;
 
-				float distance = (actorA->m_transform.position - actorB->m_transform.position).Length();
-				if (distance <= actorA->GetRadius() + actorB->GetRadius())
+				auto colliderA = actorA->GetComponent<ColliderComponent>();
+				auto colliderB = actorB->GetComponent<ColliderComponent>();
+
+				if (!colliderA || !colliderB) continue;
+
+				if (colliderA->CheckCollision(*colliderB))
 				{
 					actorA->OnCollision(actorB.get());
 					actorB->OnCollision(actorA.get());

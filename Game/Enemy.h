@@ -9,13 +9,13 @@ struct EnemyDesc : public nu::ActorDesc
 class Enemy : public nu::Actor
 {
 public:
+    CLASS_PROTOTYPE(Enemy)
     Enemy() = default;
     Enemy(const EnemyDesc& enemyDesc) : 
         Actor(enemyDesc),
         m_speed{ enemyDesc.speed }
     { }
 
-    CLASS_PROTOTYPE(Enemy)
     
     void Update(float dt) override;
     void OnCollision(Actor* other) override;

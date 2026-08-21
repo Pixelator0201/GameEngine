@@ -17,6 +17,10 @@
         {
           "type": "SpriteRendererComponent",
           "texture": "textures/player.png"
+        },
+        {
+          "type": "CircleColliderComponent",
+          "radius": 64
         }
       ]
     },
@@ -28,12 +32,21 @@
       "active": true,
       "speed": 2000.0,
       "damping": 3.0,
-      "texture": "textures/enemy.png",
       "transform": {
         "position": [ 640, 512 ],
         "rotation": 0,
         "scale": 1
-      }
+      },
+      "components": [
+        {
+          "type": "SpriteRendererComponent",
+          "texture": "textures/enemy.png"
+        },
+        {
+          "type": "CircleColliderComponent",
+          "radius": 64
+        }
+      ]
     },
     {
       "type": "Bullet",
@@ -41,14 +54,24 @@
       "name": "BulletPrototype",
       "tag": "Bullet",
       "active": true,
+      "lifespan": 1.0,
       "speed": 2000.0,
       "damping": 3.0,
-      "texture": "textures/bullet.png",
       "transform": {
         "position": [ 640, 512 ],
         "rotation": 0,
         "scale": 1
-      }
+      },
+      "components": [
+        {
+          "type": "SpriteRendererComponent",
+          "texture": "textures/bullet.png"
+        },
+        {
+          "type": "CircleColliderComponent",
+          "radius": 24
+        }
+      ]
     }
   ]
 }

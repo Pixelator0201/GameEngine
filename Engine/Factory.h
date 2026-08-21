@@ -96,7 +96,7 @@ namespace nu
             return;
         }
 
-        //m_registry[lowerName] = std::make_unique<PrototypeCreator<T>>(prototype);
+        m_registry[lowerName] = std::make_unique<PrototypeCreator<T>>(std::move(prototype));
 
     }
 
@@ -113,10 +113,10 @@ namespace nu
         }
 
         auto iter = m_registry.find(lowerName);
+        auto object = iter->second->Create();
 
         //auto creator = m_registry[lowerName];
         // create unique ptr to object
-        auto object = iter->second->Create();
 
         // check if object is derived from T
         T* derived = dynamic_cast<T*>(object.get());

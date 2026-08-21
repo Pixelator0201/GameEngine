@@ -144,13 +144,14 @@ void SpaceGame::OnPlayerDead()
 void SpaceGame::SpawnPlayer()
 {
 	auto actor = Factory::Instance().Create<Actor>("PlayerPrototype");
+	actor->SetPosition(nu::Vector2{ 30.0f, 30.0f });
 
 	m_scene->AddActor(std::move(actor));
 }
 
 void SpaceGame::SpawnEnemy()
 {
-	auto actor = Factory::Instance().Create<Actor>("PlayerPrototype");
+	auto actor = Factory::Instance().Create<Actor>("EnemyPrototype");
 	actor->SetPosition({ nu::RandomFloat(1024.0f, nu::RandomFloat(800.0f)) });
 	m_scene->AddActor(std::move(actor));
 	/*

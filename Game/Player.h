@@ -6,16 +6,18 @@ struct PlayerDesc : public nu::ActorDesc
     float speed = 0.0f;
 };
 
+
+
 class Player : public nu::Actor
 {
 public:
+    CLASS_PROTOTYPE(Player)
     Player() = default;
     Player(const PlayerDesc& playerDesc) :
         Actor{ playerDesc },
         m_speed{ playerDesc.speed }
     { }
 
-    CLASS_PROTOTYPE(Player)
     
     void Update(float dt) override;
     void OnCollision(Actor* other);

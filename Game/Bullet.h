@@ -9,6 +9,7 @@ struct BulletDesc : public nu::ActorDesc
 class Bullet : public nu::Actor
 {
 public:
+    CLASS_PROTOTYPE(Bullet)
     Bullet() = default;
     Bullet(const BulletDesc& bulletDesc) :
         Actor(bulletDesc),
@@ -16,7 +17,6 @@ public:
     {
     }
     
-    CLASS_PROTOTYPE(Bullet)
 
     void Update(float dt) override;
     void Read(const nu::json::value_t& value) override;

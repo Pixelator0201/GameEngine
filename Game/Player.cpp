@@ -6,7 +6,12 @@
 #include "Assets.h"
 #include "SpaceGame.h"
 
-FACTORY_REGISTER(Player)
+
+class RegisterPlayer {
+public: RegisterPlayer() {
+    nu::Factory::Instance().Register<Player>("Player");
+}
+}; static RegisterPlayer registerInstance;
 
 void Player::Update(float dt)
 {
@@ -50,15 +55,13 @@ void Player::Update(float dt)
             if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_SPACE))
             {
                 fire_cooldown = 0.25f;
-                BulletDesc desc;
-                desc.name = "Bullet";
-                desc.tag = "PlayerBullet";
-                desc.transform = m_transform;
-                //desc.transform.scale *= 15.0f;
-                desc.speed = 1000.0f;
-                desc.lifespan = 2.0f;
 
-                m_scene->AddActor(std::make_unique<Bullet>(desc));
+                auto bullet = nu::Factory::Instance().Create<Bullet>("BulletPrototype");
+                bullet->SetTransform(m_transform);
+                bullet->SetScale(2.0f);
+                bullet->SetTag("PlayerBullet");
+                m_scene->AddActor(std::move(bullet));
+
             }
         }
         else {
@@ -72,22 +75,28 @@ void Player::Update(float dt)
             if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_SPACE))
             {
                 fire_cooldown = 2.0f;
-                BulletDesc desc;
-                desc.name = "Bullet";
-                desc.tag = "PlayerBullet";
+                auto bullet = nu::Factory::Instance().Create<Bullet>("BulletPrototype");
+                bullet->SetTransform(m_transform);
+                bullet->SetScale(2.0f);
+                bullet->SetTag("PlayerBullet");
+                m_scene->AddActor(std::move(bullet));
+
+                //BulletDesc desc;
+                //desc.name = "Bullet";
+                //desc.tag = "PlayerBullet";
                
-                desc.transform = m_transform;
-                //desc.transform.scale *= 15.0f;
-                desc.speed = 1000.0f;
-                desc.lifespan = 2.0f;
-                
-                m_scene->AddActor(std::make_unique<Bullet>(desc));
+                //desc.transform = m_transform;
+                ////desc.transform.scale *= 15.0f;
+                //desc.speed = 1000.0f;
+                //desc.lifespan = 2.0f;
+                //
+                //m_scene->AddActor(std::make_unique<Bullet>(desc));
 
-                desc.transform.rotation += 10.0f;
-                m_scene->AddActor(std::make_unique<Bullet>(desc));
+                //desc.transform.rotation += 10.0f;
+                //m_scene->AddActor(std::make_unique<Bullet>(desc));
 
-                desc.transform.rotation -= 20.0f;
-                m_scene->AddActor(std::make_unique<Bullet>(desc));
+                //desc.transform.rotation -= 20.0f;
+                //m_scene->AddActor(std::make_unique<Bullet>(desc));
 
             }
         }
@@ -114,7 +123,7 @@ void Player::Update(float dt)
     particle.position = m_transform.position + offset;
     particle.color = colors[nu::RandomInt(3)];
     particle.texture = nu::Resources().Get<nu::Texture>("textures/bullet.png", nu::Engine::Get().GetRenderer());
-    particle.lifespan = nu::RandomFloat(0.5f, 1.5f);
+    particle.lifespan = 1.0f;
     particle.velocity = nu::Vector2{ -nu::RandomFloat(-30.0f, -100.0f), 0.0f }.Rotate((m_transform.rotation + nu::RandomInt(-30, 30)) * nu::DegToRad);
 
     if (m_health <= 0)
@@ -126,7 +135,7 @@ void Player::Update(float dt)
             particle.position = m_transform.position;
             particle.color = { 1.0f, 1.0f, 1.0f };
             particle.texture = nu::Resources().Get<nu::Texture>("textures/bullet.png", nu::Engine::Get().GetRenderer());
-            particle.lifespan = nu::RandomFloat(0.5f, 2.0f);
+            particle.lifespan = 1.0f;
             particle.velocity = { nu::RandomFloat(-600.0f, 600.0f), nu::RandomFloat(-600.0f, 600.0f) };
 
             nu::Engine::Get().GetPS().AddParticle(particle);
@@ -155,7 +164,8 @@ void Player::OnCollision(Actor* other)
                 nu::Particle particle;
                 particle.position = m_transform.position;
                 particle.color = { 1.0f, 1.0f, 1.0f };
-                particle.lifespan = nu::RandomFloat(0.5f, 2.0f);
+                particle.texture = nu::Resources().Get<nu::Texture>("textures/bullet.png", nu::Engine::Get().GetRenderer());
+                particle.lifespan = 1.0f;
                 particle.velocity = { nu::RandomFloat(-600.0f, 600.0f), nu::RandomFloat(-600.0f, 600.0f) };
                 nu::Engine::Get().GetPS().AddParticle(particle);
                 
@@ -168,7 +178,8 @@ void Player::OnCollision(Actor* other)
             nu::Particle particle;
             particle.position = other->GetTransform().position;
             particle.color = { 1.0f, 1.0f, 1.0f };
-            particle.lifespan = nu::RandomFloat(0.5f, 2.0f);
+            particle.texture = nu::Resources().Get<nu::Texture>("textures/bullet.png", nu::Engine::Get().GetRenderer());
+            particle.lifespan = 1.0f;
             particle.velocity = { nu::RandomFloat(-600.0f, 600.0f), nu::RandomFloat(-600.0f, 600.0f) };
 
             nu::Engine::Get().GetPS().AddParticle(particle);

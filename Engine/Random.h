@@ -62,7 +62,12 @@ namespace nu
 
 	inline float RandomFloat(float min, float max)
 	{
-		
+		if (min > max) {
+			float temp = 0.0f;
+			temp = max;
+			max = min;
+			min = temp;
+		}
 
 		static std::uniform_real_distribution<float> dist(min, max);
 		return dist(Generator());

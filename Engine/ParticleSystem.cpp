@@ -43,7 +43,7 @@ namespace nu
 			if (particle.active)
 			{
 				// set particle color and draw point at current position
-				renderer.DrawTexture(*particle.texture, particle.position.x, particle.position.y, 0, 0.025f);
+				renderer.DrawTexture(*particle.texture, particle.position.x, particle.position.y, 0, 0.25f);
 			}
 		}
 	}
