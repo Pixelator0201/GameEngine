@@ -21,6 +21,7 @@
 #include "Scene.h"
 #include "Texture.h"
 #include "ResourceManager.h"
+#include "Physics/Physics.h"
 
 namespace nu
 {
@@ -39,7 +40,7 @@ namespace nu
 		Time& GetTime() { return m_time; }
 		Audio& GetAudio() { return m_audio; }
 		ParticleSystem& GetPS() { return m_particleSystem; }
-
+		Physics& GetPhysics() { return m_physics; }
 
 	private:
 		Engine() = default;
@@ -47,8 +48,9 @@ namespace nu
 	private:
 		Input m_input;
 		Renderer m_renderer;
+		Physics m_physics;
 
-		Time m_time;
+		Time m_time;	
 		Audio m_audio;
 		ParticleSystem m_particleSystem;
 
