@@ -7,6 +7,8 @@
 #ifndef PCH_H
 #define PCH_H
 
+#pragma once
+
 // add headers that you want to pre-compile here
 #include "framework.h"
 
@@ -26,5 +28,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <fmod.hpp>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/error/en.h>
 
 #endif //PCH_H

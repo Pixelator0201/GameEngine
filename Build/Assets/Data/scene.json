@@ -1,6 +1,26 @@
 {
   "actors": [
     {
+      "type": "Actor",
+      "prototype": false,
+      "name": "Bat",
+      "tag": "Enemy",
+      "active": true,
+      "transform": {
+        "position": [ 200, 200 ],
+        "rotation": 0,
+        "scale": 3
+      },
+      "components": [
+        {
+          "type": "SpriteRendererAnimationComponent",
+          "texture_frames": "animations/bat_idle.json",
+          "frames_per_second": 10,
+          "loop": true
+        }
+      ]
+    },
+    {
       "type": "Player",
       "prototype": true,
       "name": "PlayerPrototype",
@@ -10,13 +30,13 @@
       "damping": 3.0,
       "transform": {
         "position": [ 640, 512 ],
-        "rotation": 0,
+        "rotation": -90,
         "scale": 1
       },
       "components": [
         {
           "type": "SpriteRendererComponent",
-          "texture": "textures/player.png"
+          "texture": "Textures/player.png"
         },
         {
           "type": "CircleColliderComponent",
@@ -40,7 +60,7 @@
       "components": [
         {
           "type": "SpriteRendererComponent",
-          "texture": "textures/enemy.png"
+          "texture": "Textures/enemy.png"
         },
         {
           "type": "CircleColliderComponent",
@@ -65,7 +85,7 @@
       "components": [
         {
           "type": "SpriteRendererComponent",
-          "texture": "textures/bullet.png"
+          "texture": "Textures/bullet.png"
         },
         {
           "type": "CircleColliderComponent",

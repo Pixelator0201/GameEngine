@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "SpriteRendererComponent.h"
-#include "Render.h"
-#include "Actor.h"
-#include <ResourceManager.h>
+#include "Renderer/Render.h"
+#include "Framework/Actor.h"
+#include "Resources/ResourceManager.h"
 #include "Engine.h"
 
 namespace nu

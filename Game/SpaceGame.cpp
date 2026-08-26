@@ -152,7 +152,7 @@ void SpaceGame::SpawnPlayer()
 void SpaceGame::SpawnEnemy()
 {
 	auto actor = Factory::Instance().Create<Actor>("EnemyPrototype");
-	actor->SetPosition({ nu::RandomFloat(1024.0f, nu::RandomFloat(800.0f)) });
+	actor->SetPosition({ nu::RandomFloat(1024.0f), nu::RandomFloat(800.0f) });
 	m_scene->AddActor(std::move(actor));
 	/*
 	EnemyDesc enemyDesc;

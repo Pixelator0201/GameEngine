@@ -1,6 +1,6 @@
 #pragma once
 #include "ColliderComponent.h"
-#include "Factory.h"
+#include "Core/Factory.h"
 
 namespace nu
 {

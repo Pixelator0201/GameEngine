@@ -1,5 +1,5 @@
 #pragma once
-#include "Actor.h"
+#include "Framework/Actor.h"
 
 struct EnemyDesc : public nu::ActorDesc
 {
@@ -9,7 +9,7 @@ struct EnemyDesc : public nu::ActorDesc
 class Enemy : public nu::Actor
 {
 public:
-    CLASS_PROTOTYPE(Enemy)
+    CLASS_PROTOTYPE(Enemy);
     Enemy() = default;
     Enemy(const EnemyDesc& enemyDesc) : 
         Actor(enemyDesc),
