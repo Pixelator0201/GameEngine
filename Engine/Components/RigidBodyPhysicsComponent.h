@@ -23,6 +23,9 @@ namespace nu
 		void SetPosition(const Vector2& position) override;
 		Vector2 GetPosition() const override;
 
+		void SetRotation(float rotation) override;
+		float GetRotation() const override;
+
 		void Read(const json::value_t& value) override;
 
 	private:
@@ -31,5 +34,6 @@ namespace nu
 
 		float m_angularAcceleration{ 0.0f };
 		float m_angularVelocity = 0.0f;
+
 	};
 }

@@ -30,8 +30,6 @@ namespace nu
         Actor(const ActorDesc& actorDesc) :
             m_tag{ actorDesc.tag },
             m_transform{ actorDesc.transform },
-            m_velocity{ actorDesc.velocity },
-            m_damping{ actorDesc.damping },
             m_lifespan{ actorDesc.lifespan }
         { }
 
@@ -43,6 +41,9 @@ namespace nu
         virtual void Update(float dt);
         virtual void Draw(const class Renderer& renderer) const;
 
+        virtual void Start();
+        virtual void OnDestroy();
+
         virtual void OnCollision(Actor* other) {}
 
         const Transform& GetTransform() const { return m_transform; }
@@ -50,10 +51,6 @@ namespace nu
         void SetPosition(const Vector2& position) { m_transform.position = position; }
         void SetRotation(const float rotation) { m_transform.rotation = rotation; }
         void SetScale(const float scale) { m_transform.scale = scale; }
-
-        const Vector2 GetVelocity() const { return m_velocity; }
-        void SetVelocity(const Vector2& velocity) { m_velocity = velocity; }
-        void AddVelocity(const Vector2& velocity) { m_velocity += velocity; }
 
         const std::string& GetName() const { return m_name; }
         void SetTag(const std::string& tag) { m_tag = tag; }
@@ -65,6 +62,8 @@ namespace nu
 
         void SetDestroyed(bool destroy = true) { m_destroyed = destroy; }
         bool GetDestroyed() const { return m_destroyed; }
+
+        bool GetPersistent() const { return  m_persistent; }
 
         virtual void Read(const json::value_t& value) override;
 
@@ -79,10 +78,9 @@ namespace nu
         std::string m_tag;
 
         Transform m_transform;
-        Vector2 m_velocity{ 0, 0 };
-        float m_damping{ 0.0f };
         float m_lifespan{ 0 };
         bool m_destroyed{ false };
+        bool m_persistent{ false };
 
         std::vector<std::unique_ptr<Component>> m_components;
 

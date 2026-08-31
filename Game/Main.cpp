@@ -9,13 +9,14 @@
 #include <fstream>
 
 #include "Engine.h"
-#include "Player.h"
-#include "Enemy.h"
+#include "SpaceGame/Player.h"
+#include "SpaceGame/Enemy.h"
 #include <fmod.hpp>
-#include "Assets.h"
+#include "SpaceGame/Assets.h"
 #include "Core/File.h"
-#include "SpaceGame.h"
-#include "Bullet.h"
+#include "SpaceGame/SpaceGame.h"
+#include "SpriteGame/SpriteGame.h"
+#include "SpaceGame/Bullet.h"
 
 
 
@@ -24,7 +25,7 @@ using namespace nu;
 int main()
 {
     // Stay.
-    SetWorkingDirectory("Assets");
+    SetWorkingDirectory("Assets/SpaceGame");
 
     //Factory::Instance().Register<Actor>("Actor");
     //Factory::Instance().Register<Object>("Object");
@@ -54,13 +55,13 @@ int main()
 
     return 0;
     */
-
+        
        
         // INITIALIZATION
     Engine::Get().Initialize();
 
-    SpaceGame game;
-    game.Initialize();
+    std::unique_ptr game = std::make_unique<SpriteGame>();
+    game->Initialize();
 
     
 
@@ -97,7 +98,7 @@ int main()
 
         float dt = Engine::Get().GetTime().GetDeltaTime();
          
-        game.Update(dt);
+        game->Update(dt);
                             
 
         Vector2 mousePosition;
@@ -134,7 +135,7 @@ int main()
         Engine::Get().GetRenderer().SetColor(0.0f, 0.0f, 0.0f, 255);
         Engine::Get().GetRenderer().Clear();
 
-        game.Draw(Engine::Get().GetRenderer());
+        game->Draw(Engine::Get().GetRenderer());
 
         for (int i = 0; i < (int)points.size() - 1; i++) {
             Engine::Get().GetRenderer().SetColor(1.0f, 1.0f, 1.0f);
@@ -154,6 +155,8 @@ int main()
 
 
     }
+
+    game.reset();
 
     // SHUTDOWN
     Engine::Get().Shutdown();

@@ -6,22 +6,60 @@
 
 namespace nu
 {
-	
+
+	void Scene::Update(float dt)
+	{
+		// Update Actors
+		for (auto& actor : m_actors)
+		{
+			actor->Update(dt);
+		}
+
+		// update collisions
+		//UpdateCollisions();
+
+		// Remove destroyed actors
+		for (auto& actor : m_actors)
+		{
+			if(actor->m_destroyed) actor->OnDestroy();
+		}
+		std::erase_if(m_actors, [](auto& actor) { return actor->m_destroyed; });
+
+		// Add pending actors
+		for (auto& actor : m_pendingActors)
+		{
+			actor->Start();
+			m_actors.push_back(std::move(actor));
+		}
+
+		//m_actors.insert(m_actors.end(), m_pendingActors.begin(), m_pendingActors.end());
+		m_pendingActors.clear();
+	}
+
+	void Scene::Draw(const class Renderer& renderer)
+	{
+		for (const auto& actor : m_actors)
+		{
+			actor->Draw(renderer);
+		}
+	}
+
 	void Scene::AddActor(std::unique_ptr<Actor> actor)
 	{
 		actor->m_scene = this;
 		m_pendingActors.push_back(std::move(actor));
 	}
 
-	void Scene::RemoveAllActors()
+	void Scene::RemoveAllActors(bool force)
 	{
-		m_actors.clear();
+
+		std::erase_if(m_actors, [force](auto& actor) { return !actor->GetPersistent() || force; });
 	}
 
 	bool Scene::Load(const std::string& sceneName)
 	{
 		json::document_t document;
-		if (json::Load("data/scene.json", document))
+		if (json::Load(sceneName, document))
 		{
 			if (JSON_HAS_NAME(document, "actors"))
 			{
@@ -59,38 +97,6 @@ namespace nu
 		}
 
 		return true;
-	}
-
-	void Scene::Update(float dt)
-	{
-		// Update Actors
-		for (auto& actor : m_actors)
-		{
-			actor->Update(dt);
-		}
-
-		// update collisions
-		UpdateCollisions();
-
-		// Remove destroyed actors
-		std::erase_if(m_actors, [](auto& actor) { return actor->m_destroyed; });
-
-		// Add pending actors
-		for (auto& actor : m_pendingActors)
-		{
-			m_actors.push_back(std::move(actor));
-		}
-
-		//m_actors.insert(m_actors.end(), m_pendingActors.begin(), m_pendingActors.end());
-		m_pendingActors.clear();
-	}
-	
-	void Scene::Draw(const class Renderer& renderer)
-	{
-		for (const auto& actor : m_actors)
-		{
-			actor->Draw(renderer);
-		}
 	}
 
 	void Scene::UpdateCollisions()
