@@ -2,6 +2,9 @@
 #include "Engine.h"
 #include <memory>
 #include "Core/File.h"
+#include "Renderer/Tilemap.h"
+#include "Components/TilemapRendererComponent.h"
+#include "Framework/Scene.h"
 
 using namespace nu;
 bool SpriteGame::Initialize()
@@ -13,34 +16,17 @@ bool SpriteGame::Initialize()
 	m_scene->SetGame(this);
 	m_scene->Load("data/scene.json");
 
-	
-
-	Engine::Get().GetAudio().AddSound("alert", "alert.mp3");
-
-	//titleFont = Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 64);
-	//titleFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 64);
-
-	
-	//Resources().Get<Texture>("textures/player.png", Engine::Get().GetRenderer());
-
+	//Engine::Get().GetAudio().AddSound("alert", "alert.mp3");
 
 	titleText = new Text(Resources().GetWithID<Font>("title_font", "Fonts/Orbitron-VariableFont_wght.ttf", 64.0f));
 	titleText->Create(Engine::Get().GetRenderer(), "Totally Original *Sprite* Game (tm)", Color{ 1.0f, 1.0f, 1.0f });
 
-	//gameOverFont = std::make_shared<Font>();
-	//gameOverFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 64);
-	
 	gameOverText = new Text(Resources().GetWithID<Font>("game_font", "Fonts/Orbitron-VariableFont_wght.ttf", 64.0f));
 	gameOverText->Create(Engine::Get().GetRenderer(), "Game Over....", Color{ 1.0f, 1.0f, 1.0f });
-
-	//gameFont = Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 32);
-	//gameFont->Load("Fonts/Orbitron-VariableFont_wght.ttf", 32);
 
 	scoreText = new Text(Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 32.0f));
 	livesText = new Text(Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 32.0f));
 	healthText = new Text(Resources().Get<Font>("Fonts/Orbitron-VariableFont_wght.ttf", 32.0f));
-
-	
 
 	return false;
 }
@@ -66,7 +52,8 @@ void SpriteGame::Update(float dt)
 		if (m_stateTimer <= 0)
 		{
 			m_scene->RemoveAllActors();
-			//SpawnPlayer();
+			m_scene->Load("data/level.json");
+			SpawnPlayer();
 			m_spawnTime = 5.0f;
 			m_gameState = GameState::Game;
 			m_stateTimer = 2.0f;
@@ -75,15 +62,15 @@ void SpriteGame::Update(float dt)
 		break;
 	case SpriteGame::GameState::Game:
 		m_spawnTimer -= dt;
-		//if (m_spawnTimer <= 0)
-		//{
-		//	m_spawnTimer = m_spawnTime;
-		//	SpawnEnemy();
-		//	m_spawnCount++;
-		//	if (m_spawnCount > 5)
-		//		m_spawnTime -= 0.5f;
-		//	m_spawnCount = 0;
-		//}
+		if (m_spawnTimer <= 0)
+		{
+			m_spawnTimer = m_spawnTime;
+			SpawnEnemy();
+			m_spawnCount++;
+			if (m_spawnCount > 5)
+				m_spawnTime -= 0.5f;
+			m_spawnCount = 0;
+		}
 		break;
 	case SpriteGame::GameState::GameOver:
 		m_scene->RemoveAllActors();
@@ -103,6 +90,8 @@ void SpriteGame::Update(float dt)
 
 void SpriteGame::Draw(nu::Renderer& renderer)
 {
+	renderer.EnableCamera(false);
+
 	renderer.DrawTexture(*nu::Resources().Get<Texture>("textures/background.png", Engine::Get().GetRenderer()), 500, 500, 0.0f, 2.0f);
 
 	switch (m_gameState)
@@ -130,40 +119,49 @@ void SpriteGame::Draw(nu::Renderer& renderer)
 		break;
 
 	}
+	renderer.EnableCamera();
+	
 	Game::Draw(renderer);
 }
-//
-//void SpriteGame::OnPlayerDead()
-//{
-//	m_lives--;
-//	if (m_lives <= 0) m_gameState = GameState::GameOver;
-//	else m_gameState = GameState::StartLevel;
-//}
-//
-//void SpriteGame::SpawnPlayer()
-//{
-//	auto actor = Factory::Instance().Create<Actor>("PlayerPrototype");
-//	actor->SetPosition(nu::Vector2{ 30.0f, 30.0f });
-//
-//	m_scene->AddActor(std::move(actor));
-//}
-//
-//void SpriteGame::SpawnEnemy()
-//{
-//	auto actor = Factory::Instance().Create<Actor>("EnemyPrototype");
-//	actor->SetPosition({ nu::RandomFloat(1024.0f), nu::RandomFloat(800.0f) });
-//	m_scene->AddActor(std::move(actor));
-//	/*
-//	EnemyDesc enemyDesc;
-//	enemyDesc.name = "Enemy";
-//	enemyDesc.name = "Enemy";
-//	enemyDesc.texture = Resources().Get<Texture>("textures/enemy.png", Engine::Get().GetRenderer());
-//	//enemyDesc.model = assets::enemyModel;
-//	enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)nu::Engine::Get().GetRenderer().GetWidth()),
-//		nu::RandomFloat((float)nu::Engine::Get().GetRenderer().GetHeight())}, 90.0f, 1.0f };
-//	enemyDesc.damping = 3.0f;
-//	enemyDesc.speed = RandomFloat(1000.0f, 2000.0f);
-//
-//	m_scene->AddActor(std::make_unique<Enemy>(enemyDesc));
-//	*/
-//}
+
+void SpriteGame::OnPlayerDead()
+{
+	m_lives--;
+	if (m_lives <= 0) m_gameState = GameState::GameOver;
+	else m_gameState = GameState::StartLevel;
+}
+
+void SpriteGame::SpawnPlayer()
+{
+	auto actor = Factory::Instance().Create<Actor>("PlayerPrototype");
+
+	m_scene->AddActor(std::move(actor));
+}
+
+void SpriteGame::SpawnEnemy()
+{
+	int enemyIndex = nu::RandomInt(2);
+	if (enemyIndex == 0) {
+		auto actor = Factory::Instance().Create<Actor>("EnemyPrototype");
+		actor->SetPosition({ nu::RandomFloat(1024.0f), nu::RandomFloat(800.0f) });
+		m_scene->AddActor(std::move(actor));
+	}
+	else if (enemyIndex == 1) {
+		auto actor = Factory::Instance().Create<Actor>("FlyingEnemyPrototype");
+		actor->SetPosition({ nu::RandomFloat(1024.0f), nu::RandomFloat(800.0f) });
+		m_scene->AddActor(std::move(actor));
+	}
+	/*
+	EnemyDesc enemyDesc;
+	enemyDesc.name = "Enemy";
+	enemyDesc.name = "Enemy";
+	enemyDesc.texture = Resources().Get<Texture>("textures/enemy.png", Engine::Get().GetRenderer());
+	//enemyDesc.model = assets::enemyModel;
+	enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)nu::Engine::Get().GetRenderer().GetWidth()),
+		nu::RandomFloat((float)nu::Engine::Get().GetRenderer().GetHeight())}, 90.0f, 1.0f };
+	enemyDesc.damping = 3.0f;
+	enemyDesc.speed = RandomFloat(1000.0f, 2000.0f);
+
+	m_scene->AddActor(std::make_unique<Enemy>(enemyDesc));
+	*/
+}

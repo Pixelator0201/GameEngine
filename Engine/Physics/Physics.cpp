@@ -38,10 +38,10 @@ namespace nu
 			b2BodyId bodyA = b2Shape_GetBody(contactEvent->shapeIdA);
 			b2BodyId bodyB = b2Shape_GetBody(contactEvent->shapeIdB);
 
-			Actor* actorA = (Actor*)b2Body_GetUserData(bodyA);
+			Actor* actorA = (Actor*)(b2Body_GetUserData(bodyA));
 			if (!actorA || actorA->GetDestroyed() || !actorA->IsActive()) continue;
 
-			Actor* actorB = (Actor*)b2Body_GetUserData(bodyB);
+			Actor* actorB = (Actor*)(b2Body_GetUserData(bodyB));
 			if (!actorB || actorB->GetDestroyed() || !actorB->IsActive()) continue;
 			
 			actorA->OnCollision(actorB);
@@ -49,7 +49,7 @@ namespace nu
 		}
 
 		// begin sensor
-		b2SensorEvents sensorEvents = b2World_GetSensorEvents(m_worldId);
+		auto sensorEvents = b2World_GetSensorEvents(m_worldId);
 		for (int i = 0; i < sensorEvents.beginCount; i++)
 		{
 			auto sensorEvent = sensorEvents.beginEvents + i;
@@ -58,10 +58,10 @@ namespace nu
 			b2BodyId bodyA = b2Shape_GetBody(sensorEvent->sensorShapeId);
 			b2BodyId bodyB = b2Shape_GetBody(sensorEvent->visitorShapeId);
 
-			Actor* actorA = (Actor*)b2Body_GetUserData(bodyA);
+			Actor* actorA = (Actor*)(b2Body_GetUserData(bodyA));
 			if (!actorA || actorA->GetDestroyed() || !actorA->IsActive()) continue;
 
-			Actor* actorB = (Actor*)b2Body_GetUserData(bodyB);
+			Actor* actorB = (Actor*)(b2Body_GetUserData(bodyB));
 			if (!actorB || actorB->GetDestroyed() || !actorB->IsActive()) continue;
 
 			actorA->OnCollision(actorB);

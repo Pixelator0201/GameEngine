@@ -25,7 +25,7 @@ using namespace nu;
 int main()
 {
     // Stay.
-    SetWorkingDirectory("Assets/SpaceGame");
+    SetWorkingDirectory("Assets");
 
     //Factory::Instance().Register<Actor>("Actor");
     //Factory::Instance().Register<Object>("Object");

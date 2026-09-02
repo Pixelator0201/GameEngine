@@ -17,9 +17,6 @@ public:
 
 public:
 	SpriteGame() = default;
-	SpriteGame(nu::Scene* scene) :
-		Game{ scene } 
-	{	}
 
 	bool Initialize();
 

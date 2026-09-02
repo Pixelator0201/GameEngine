@@ -16,32 +16,36 @@
     <Filter Include="Assets">
       <UniqueIdentifier>{25cd83c8-6494-4fcc-85cd-f3ec75cfb03c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\Scenes">
-      <UniqueIdentifier>{1fc742c5-fce1-4aa1-9ff5-6e1dc5c1aa3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Assets\Animations">
-      <UniqueIdentifier>{f65ddd25-6547-4f10-abcb-5fe0a1933096}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Assets\Tilemaps">
-      <UniqueIdentifier>{938eec02-ff5f-48fe-b40f-c810a15de0e5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SpaceGame">
       <UniqueIdentifier>{9e2e81a1-fd77-469d-8b9e-7f85dc025aaf}</UniqueIdentifier>
     </Filter>
     <Filter Include="SpriteGame">
       <UniqueIdentifier>{2cf06643-dca7-4ccf-b367-e56e8122b088}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Build\Assets\Animations\bat_idle.json">
-      <Filter>Assets\Animations</Filter>
-    </None>
-    <None Include="..\Build\Assets\Data\scene.json">
-      <Filter>Assets\Scenes</Filter>
-    </None>
-    <None Include="..\Build\Assets\Tilemaps\world.json">
-      <Filter>Assets\Tilemaps</Filter>
-    </None>
+    <Filter Include="Assets\SpaceGame">
+      <UniqueIdentifier>{a0177b17-2153-4ed7-b2ba-aecbf12d26a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\SpaceGame\Scenes">
+      <UniqueIdentifier>{1fc742c5-fce1-4aa1-9ff5-6e1dc5c1aa3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\SpaceGame\Tilemaps">
+      <UniqueIdentifier>{938eec02-ff5f-48fe-b40f-c810a15de0e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\SpaceGame\Animations">
+      <UniqueIdentifier>{f65ddd25-6547-4f10-abcb-5fe0a1933096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\SpriteGame">
+      <UniqueIdentifier>{c47391a6-7060-4675-b6ea-a9babdfd7c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\SpriteGame\Animations">
+      <UniqueIdentifier>{36db935d-8db3-4d5d-b265-717360e72df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\SpriteGame\Scenes">
+      <UniqueIdentifier>{27fdabab-7c09-4743-aabb-8ea05b146632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\SpriteGame\Tilemaps">
+      <UniqueIdentifier>{7af308c9-b279-44b6-aee3-b778833a66dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -61,6 +65,21 @@
       <Filter>SpaceGame</Filter>
     </ClCompile>
     <ClCompile Include="SpriteGame\SpriteGame.cpp">
+      <Filter>SpriteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\EnemyController.cpp">
+      <Filter>SpriteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\PlayerController.cpp">
+      <Filter>SpriteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\FlyingEnemyController.cpp">
+      <Filter>SpriteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\Damager.cpp">
+      <Filter>SpriteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGame\CharacterBase.cpp">
       <Filter>SpriteGame</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,5 +102,34 @@
     <ClInclude Include="SpriteGame\SpriteGame.h">
       <Filter>SpriteGame</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteGame\EnemyController.h">
+      <Filter>SpriteGame</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\PlayerController.h">
+      <Filter>SpriteGame</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\FlyingEnemyController.h">
+      <Filter>SpriteGame</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\CharacterBase.h">
+      <Filter>SpriteGame</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGame\Damager.h">
+      <Filter>SpriteGame</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Build\Assets\SpriteGame\Animations\bat_idle.json">
+      <Filter>Assets\SpriteGame\Animations</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Tilemaps\world.json">
+      <Filter>Assets\SpriteGame\Tilemaps</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\data\scene.json">
+      <Filter>Assets\SpriteGame\Scenes</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\data\level.json">
+      <Filter>Assets\SpriteGame\Scenes</Filter>
+    </None>
   </ItemGroup>
 </Project>
