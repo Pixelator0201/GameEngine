@@ -28,7 +28,7 @@ namespace nu
 	{
 		if (!m_spriteAnimation.textureFrames) return;
 
-		m_frame += dt;
+		m_frameTimer += dt;
 		float frameTime = 1.0f / m_spriteAnimation.framesPerSecond;
 
 		while (m_frameTimer >= frameTime)

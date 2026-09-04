@@ -35,7 +35,9 @@
           "type": "Box2DPhysicsComponent",
           "linear_damping": 2.0,
           "angular_damping": 2.0,
-          "size": [ 48, 48 ],
+          "shape": "capsule",
+          "size": [ 16, 32 ],
+          "constrain_angle": true,
           "gravity_scale": 1
         }
       ]
@@ -56,38 +58,38 @@
       "components": [
         {
           "type": "SpriteAnimatorRendererComponent",
-          "default_animation": "run",
-          "origin": [ 0.5, 1.0 ],
+          "default_animation": "idle",
+          "origin": [ 0, 0 ],
           "animations": [
             {
               "name": "run",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/hero_run.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
               "name": "idle",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/hero_idle.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
               "name": "attack",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/hero_attack.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
               "name": "hit",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/hero_hit.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
               "name": "death",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/hero_death.json",
               "frames_per_second": 10,
-              "loop": true
+              "loop": false
             }
           ]
         },
@@ -96,7 +98,7 @@
           "linear_damping": 2.0,
           "angular_damping": 2.0,
           "shape": "capsule",
-          "size": [ 16, 16 ],
+          "size": [ 16, 32 ],
           "constrain_angle": true,
           "gravity_scale": 1
         }
@@ -108,12 +110,12 @@
       "name": "EnemyPrototype",
       "tag": "Enemy",
       "active": true,
-      "speed": 2000.0,
+      "speed": 1000.0,
       "health": 15,
       "transform": {
         "position": [ 640, 512 ],
         "rotation": 0,
-        "scale": 3
+        "scale": 2
       },
       "components": [
         {
@@ -122,25 +124,25 @@
           "animations": [
             {
               "name": "run",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/enemy_run.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
               "name": "idle",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/enemy_idle.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
               "name": "attack",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/enemy_attack.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
               "name": "hit",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/enemy_hit.json",
               "frames_per_second": 10,
               "loop": true
             }
@@ -151,7 +153,7 @@
           "linear_damping": 2.0,
           "angular_damping": 2.0,
           "shape": "capsule",
-          "size": [ 16, 16 ],
+          "size": [ 16, 32 ],
           "constrain_angle": true,
           "gravity_scale": 1
         }
@@ -163,33 +165,33 @@
       "name": "FlyingEnemyPrototype",
       "tag": "FlyingEnemy",
       "active": true,
-      "speed": 2000.0,
+      "speed": 1500.0,
       "health":  5,
       "transform": {
         "position": [ 640, 512 ],
         "rotation": 0,
-        "scale": 10
+        "scale": 2
       },
       "components": [
         {
           "type": "SpriteAnimatorRendererComponent",
-          "default_animation": "run",
+          "default_animation": "idle",
           "animations": [
             {
-              "name": "attack",
-              "texture_frames": "Animations/bat_idle.json",
+              "name": "idle",
+              "texture_frames": "Animations/eye_idle.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
-              "name": "idle",
-              "texture_frames": "Animations/bat_idle.json",
+              "name": "attack",
+              "texture_frames": "Animations/eye_attack.json",
               "frames_per_second": 10,
               "loop": true
             },
             {
               "name": "hit",
-              "texture_frames": "Animations/bat_idle.json",
+              "texture_frames": "Animations/eye_hit.json",
               "frames_per_second": 10,
               "loop": true
             }
@@ -200,10 +202,9 @@
           "linear_damping": 2.0,
           "angular_damping": 2.0,
           "shape": "capsule",
-          "size": [ 48, 48 ],
+          "size": [ 16, 32 ],
           "constrain_angle": true,
-          "gravity_scale": 0,
-          "is_sensor": true
+          "gravity_scale": 0
         }
       ]
     },
@@ -218,13 +219,21 @@
       "transform": {
         "position": [ 640, 512 ],
         "rotation": 0,
-        "scale": 10
+        "scale": 1
       },
       "components": [
         {
           "type": "SpriteRendererComponent",
-          "texture": "textures/bullet.png",
+          "texture": "textures/damager.png",
           "active": false
+        },
+        {
+          "type": "Box2DPhysicsComponent",
+          "shape": "circle",
+          "size": [ 64, 64 ],
+          "is_sensor": true,
+          "constrain_angle": true,
+          "gravity_scale": 0
         }
 
       ]

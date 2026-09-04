@@ -4,6 +4,7 @@
 #include "Framework/Scene.h"
 #include "Engine.h"
 #include "Damager.h"
+#include "SpriteGame.h"
 
 FACTORY_REGISTER(PlayerController)
 
@@ -74,6 +75,7 @@ void PlayerController::Update(float dt)
 	}
 
 
+
 	
 
 	m_physicsComponent->SetVelocity(velocity);
@@ -84,7 +86,7 @@ void PlayerController::Update(float dt)
 
 void PlayerController::OnCollision(nu::Actor* other)
 {
-	if (nu::EqualsIgnoreCase(other->GetTag(), "EnemyDamager"))
+	if (nu::EqualsIgnoreCase(other->GetTag(), "EnemyDamager") && m_health > 0)
 	{
 		m_state = State::Hit;
 		m_rendererComponent->Play("hit");
@@ -92,7 +94,9 @@ void PlayerController::OnCollision(nu::Actor* other)
 		if (damager) m_health -= damager->GetDamage();
 		if (m_health <= 0)
 		{
+			m_rendererComponent->Play("death");
 			SetDestroyed();
+			((SpriteGame*)m_scene->GetGame())->OnPlayerDead();
 		}
 
 		other->SetDestroyed();

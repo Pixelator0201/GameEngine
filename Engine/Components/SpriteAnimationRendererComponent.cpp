@@ -32,7 +32,7 @@ namespace nu
 	{
 		if (!m_textureFrames) return;
 
-		m_frame += dt;
+		m_frameTimer += dt;
 		float frameTime = 1.0f / m_framesPerSecond;
 
 		while (m_frameTimer >= frameTime)

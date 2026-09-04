@@ -206,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Build\Assets\SpriteGame\Animations\bat_idle.json" />
+    <None Include="..\Build\Assets\SpriteGame\Animations\hero_hit.json" />
     <None Include="..\Build\Assets\SpriteGame\data\level.json" />
     <None Include="..\Build\Assets\SpriteGame\data\scene.json" />
     <None Include="..\Build\Assets\SpriteGame\Tilemaps\world.json" />

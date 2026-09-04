@@ -126,8 +126,8 @@ namespace nu
     {
         Vector2 size = texture.GetSize();
 
-        float cameraX = (m_cameraEnabled) ? m_camera.x : 0;
-        float cameraY = (m_cameraEnabled) ? m_camera.y : 0;
+        float cameraX = (m_cameraEnabled) ? (m_camera.x - m_width * 0.5f) : 0.0f;
+        float cameraY = (m_cameraEnabled) ? (m_camera.y - m_height * 0.5f) : 0.0f;
 
         SDL_FRect destRect;
         destRect.w = size.x * scale;

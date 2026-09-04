@@ -3,6 +3,7 @@
 #include "Components/SpriteAnimatorRendererComponent.h"
 #include "Engine.h"
 #include "Damager.h"
+#include "SpriteGame.h"
 
 FACTORY_REGISTER(EnemyController)
 
@@ -30,12 +31,24 @@ void EnemyController::Update(float dt)
 		{
 			nu::Vector2 position = GetTransform().position;
 			nu::Vector2 playerPosition = player->GetTransform().position;
+			nu::Vector2 direction = playerPosition - position;
 
 			if (playerPosition.x < position.x) dir = -1.0f;
 			else dir = 1.0f;
+
+			if (direction.Length() < 100.0f)
+			{
+				m_state = State::Attack;
+				m_rendererComponent->Play("attack");
+
+				auto damager = nu::Factory::Instance().Create<Damager>("DamagerPrototype");
+				damager->SetDamage(3.0f);
+				damager->SetPosition(GetTransform().position);
+				damager->SetScale(2.0f);
+				damager->SetTag("EnemyDamager");
+				m_scene->AddActor(std::move(damager));
+			}
 		}
-
-
 		if (dir != 0.0f)
 		{
 			velocity.x = dir * 100;
@@ -46,14 +59,11 @@ void EnemyController::Update(float dt)
 		{
 			m_rendererComponent->Play("idle");
 		}
+
+
 	}
 		break;
 	case CharacterBase::State::Attack:
-		if (m_rendererComponent->GetFrame() == 3)
-		{
-
-		}
-		break;
 	case CharacterBase::State::Hit:
 		if (m_rendererComponent->IsAnimationDone())
 		{
@@ -85,6 +95,7 @@ void EnemyController::OnCollision(nu::Actor* other)
 		if (m_health <= 0)
 		{
 			SetDestroyed();
+			((SpriteGame*)m_scene->GetGame())->AddPoints(500);
 		}
 	}
 }

@@ -122,14 +122,17 @@
     <None Include="..\Build\Assets\SpriteGame\Animations\bat_idle.json">
       <Filter>Assets\SpriteGame\Animations</Filter>
     </None>
-    <None Include="..\Build\Assets\SpriteGame\Tilemaps\world.json">
-      <Filter>Assets\SpriteGame\Tilemaps</Filter>
-    </None>
     <None Include="..\Build\Assets\SpriteGame\data\scene.json">
       <Filter>Assets\SpriteGame\Scenes</Filter>
     </None>
     <None Include="..\Build\Assets\SpriteGame\data\level.json">
       <Filter>Assets\SpriteGame\Scenes</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Tilemaps\world.json">
+      <Filter>Assets\SpriteGame\Tilemaps</Filter>
+    </None>
+    <None Include="..\Build\Assets\SpriteGame\Animations\hero_hit.json">
+      <Filter>Assets\SpriteGame\Animations</Filter>
     </None>
   </ItemGroup>
 </Project>

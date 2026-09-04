@@ -3,6 +3,7 @@
 #include "Components/SpriteAnimatorRendererComponent.h"
 #include "Engine.h"
 #include "Damager.h"
+#include "SpriteGame.h"
 
 FACTORY_REGISTER(FlyingEnemyController)
 
@@ -26,6 +27,16 @@ void FlyingEnemyController::Update(float dt)
 	{
 		float dir = 0.0f;
 		auto player = m_scene->GetActorByName<Actor>("PlayerPrototype");
+		if (dir != 0.0f)
+		{
+			m_rendererComponent->Play("idle");
+			velocity.x = dir * 100;
+			m_rendererComponent->SetFlipH(dir < 0.0f);
+		}
+		else
+		{
+			m_rendererComponent->Play("idle");
+		}
 		if (player)
 		{
 			nu::Vector2 position = GetTransform().position;
@@ -37,12 +48,12 @@ void FlyingEnemyController::Update(float dt)
 			if (direction.Length() < 100.0f)
 			{
 				m_state = State::Attack;
-				m_rendererComponent->Play("Attack");
+				m_rendererComponent->Play("attack");
 
 				auto damager = nu::Factory::Instance().Create<Damager>("DamagerPrototype");
 				damager->SetDamage(3.0f);
 				damager->SetPosition(GetTransform().position);
-				damager->SetScale(5.0f);
+				damager->SetScale(2.0f);
 				damager->SetTag("EnemyDamager");
 				m_scene->AddActor(std::move(damager));
 			}
@@ -51,20 +62,10 @@ void FlyingEnemyController::Update(float dt)
 		}
 
 
-		if (dir != 0.0f)
-		{
-			velocity.x = dir * 100;
-			m_rendererComponent->Play("run");
-			m_rendererComponent->SetFlipH(dir < 0.0f);
-		}
-		else
-		{
-			m_rendererComponent->Play("idle");
-		}
 	}
 	break;
-	case CharacterBase::State::Attack:
 	case CharacterBase::State::Hit:
+	case CharacterBase::State::Attack:
 		if (m_rendererComponent->IsAnimationDone())
 		{
 			m_state = State::Move;
@@ -92,6 +93,7 @@ void FlyingEnemyController::OnCollision(nu::Actor* other)
 		if (m_health <= 0)
 		{
 			SetDestroyed();
+			((SpriteGame*)m_scene->GetGame())->AddPoints(250);
 		}
 
 		other->SetDestroyed();
